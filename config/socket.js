@@ -11,9 +11,6 @@ module.exports = (server) =>{
     let playerSpawnPoints = [];
     let clients = {};
 
-    //let bcrypt = require('bcrypt');
-    const saltRounds = 10;
-
     //let username = "";
     //let user_id = 0;
     //let coins = 0;
@@ -228,38 +225,31 @@ module.exports = (server) =>{
                         lastUserId.select('user_id');
 
                         lastUserId.exec((err, counter) => {
-
-                           // bcrypt.genSalt(saltRounds, function(err, salt) {
-                               /// bcrypt.hash(data.password, salt, function(err, hash) {
-
                                     //console.log(counter.user_id);
 
-                                    new User({
-                                        user_id: counter.user_id + 1,
-                                        username: data.username,
-                                        password: data.password,
-                                        mail: data.mail,
-                                        sendMail: data.sendMail,
-                                        date_reg: Math.floor(Date.now() / 1000),
-                                        is_logged: false
-                                    }).save();
+                            new User({
+                                user_id: counter.user_id + 1,
+                                username: data.username,
+                                password: data.password,
+                                mail: data.mail,
+                                sendMail: data.sendMail,
+                                date_reg: Math.floor(Date.now() / 1000),
+                                is_logged: false
+                            }).save();
 
-                                    new Character({
-                                        user_id: counter.user_id + 1,
-                                        fish: 500
-                                    }).save();
+                            new Character({
+                                user_id: counter.user_id + 1,
+                                fish: 500
+                            }).save();
 
-                                    counter.user_id++;
-                                    counter.save().then(() => {
-                                        let errObj = {
-                                            errors: errors
-                                        };
+                            counter.user_id++;
+                            counter.save().then(() => {
+                                let errObj = {
+                                    errors: errors
+                                };
 
-                                        socket.emit('user register', errObj);
-                                    });
-                               // });
-                         //   });
-
+                                socket.emit('user register', errObj);
+                            });
 
                         })
                     }
