@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 1153088229
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: fb7810e2ef17e3b27bf2472db08eddaa
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4774d6da9b606debf00b5a5d61c4487c
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/Sprites/Items/pin.png
+- Assets/Resources/Sprites/Items/pinPC.png
+Dependencies: []

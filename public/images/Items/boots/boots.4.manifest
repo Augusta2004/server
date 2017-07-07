@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 3238230604
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 900e2c33355d4c14b95494518c4da43d
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4774d6da9b606debf00b5a5d61c4487c
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/Sprites/Items/bootsPC.png
+- Assets/Resources/Sprites/Items/boots.png
+- Assets/Resources/Animations/boots4sprite.png
+Dependencies: []
