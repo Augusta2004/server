@@ -398,7 +398,7 @@ console.log(data);
         socket.on('get other player items', (data) => {
             Character_item.find({username: data.name, is_on: true}, function (err, items) {
 
-                socket.emit('get other player items', {items});
+                socket.emit('get other player items', {username:data.name, items});
             })
         });
 
@@ -590,10 +590,11 @@ console.log(data);
 
         socket.on('disconnect', () => {
             //TODO FIX THIS SHIT
-            if(currentPlayer.roomName != "unknown") {
+            if(currentPlayer.roomName != "unknown" && clients[currentPlayer.roomName] != undefined) {
                 console.log(currentPlayer.name + "recv: disconnected");
                 socket.to(currentPlayer.roomName).emit('other player disconnected', currentPlayer);
-
+console.log(clients[currentPlayer.roomName]);
+console.log(clients);
                 for (let i = 0; i < clients[currentPlayer.roomName].length; i++) {
                     if (clients[currentPlayer.roomName][i].name === currentPlayer.name) {
                         clients[currentPlayer.roomName].splice(i, 1);
