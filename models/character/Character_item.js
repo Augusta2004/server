@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 let itemSchema = mongoose.Schema({
-    user_id: Number,
+    user_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     username: String,
-    item_id: Number,
+    item_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Item' },
     name: String,
     picture: String,
     type: String,

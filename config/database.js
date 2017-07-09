@@ -16,10 +16,8 @@ module.exports = (config) => {
 
     require('./../models/Role').initialize();
     require('./../models/User');
-    require('./../models/character/Character');
     require('./../models/Item');
     require('./../models/character/Character_item');
-    require('./../models/Counter');
     require('./../models/Article');
 
 

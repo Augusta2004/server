@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 let itemSchema = mongoose.Schema({
-    item_id: Number,
     name: String,
     picture: String,
     price: Number,

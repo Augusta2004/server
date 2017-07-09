@@ -3,18 +3,21 @@ const Role = mongoose.model('Role');
 const encryption = require('./../config/encryption');
 
 let userSchema = mongoose.Schema({
-    user_id: { type: Number },
     username: { type: String },
     password: { type: String, required: true },
     mail: { type: String, required: true, unique: true },
     sendMail: { type: Boolean },
     date_reg: { type: Date, default: Date.now() },
-    is_logged: { type: Boolean },
-    last_logged: { type: Number },
+    is_logged: { type: Boolean,default:false },
+    last_logged: { type: Number},
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }],
     banned: { type: Boolean },
     salt: { type: String, required: true },
     articles: { type: [mongoose.Schema.Types.ObjectId], ref: 'Article' },
+
+    character: {
+        fish: { type: Number, default:150 }
+    }
 });
 
 userSchema.method({

@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
-const Character = mongoose.model('Character');
 const Item = mongoose.model('Item');
 const Character_item = mongoose.model('Character_item');
-const Counter = mongoose.model('Counter');
 
-module.exports = (server) =>{
+module.exports = (server) => {
     const io = require('socket.io').listen(server);
     let async = require('async');
     let playerSpawnPoints = [];
@@ -25,10 +23,9 @@ module.exports = (server) =>{
 
         socket.on('join room', (data) => {
             console.log(data);
-            if(io.sockets.adapter.sids[socket.id][currentPlayer.roomName]) {
+            if (io.sockets.adapter.sids[socket.id][currentPlayer.roomName]) {
 
-                if(currentPlayer.roomName.indexOf("Room") !== -1)
-                {
+                if (currentPlayer.roomName.indexOf("Room") !== -1) {
                     for (let i = 0; i < clients[currentPlayer.roomName].length; i++) {
                         if (clients[currentPlayer.roomName][i].name === currentPlayer.name) {
                             clients[currentPlayer.roomName].splice(i, 1);
@@ -53,8 +50,7 @@ module.exports = (server) =>{
 
             console.log(currentPlayer.name + 'recv: player connected');
 
-            if (clients[currentPlayer.roomName] != undefined)
-            {
+            if (clients[currentPlayer.roomName] != undefined) {
                 for (let i = 0; i < clients[currentPlayer.roomName].length; i++) {
                     let playerConnected = {
                         id: clients[currentPlayer.roomName][i].id,
@@ -68,20 +64,20 @@ module.exports = (server) =>{
                     console.log(currentPlayer.name + ' emit: other player connected:' + JSON.stringify(playerConnected));
 
                     console.log(clients[currentPlayer.roomName].length);
-                    if(i == clients[currentPlayer.roomName].length-1){
+                    if (i == clients[currentPlayer.roomName].length - 1) {
                         socket.emit('players loaded', {});
 
                         console.log('other players are loaded 1');
                     }
                 }
 
-                if(clients[currentPlayer.roomName].length == 0){
+                if (clients[currentPlayer.roomName].length == 0) {
                     socket.emit('players loaded', {});
 
                     console.log('other players are loaded 2');
                 }
             }
-            else{
+            else {
                 socket.emit('players loaded', {});
 
                 console.log('other players are loaded 3');
@@ -106,8 +102,7 @@ module.exports = (server) =>{
             currentPlayer.position = randomSpawnPoints.position;
             currentPlayer.animation = [0, -1];
 
-            if(clients[currentPlayer.roomName] == undefined)
-            {
+            if (clients[currentPlayer.roomName] == undefined) {
                 clients[currentPlayer.roomName] = new Array();
             }
 
@@ -273,64 +268,60 @@ module.exports = (server) =>{
 
         socket.on('user login', (data) => {
             let errors = new Array();
-console.log(data);
+            console.log(data);
             User.findOne({username: data.username}, function (err, existingUser) {
                 // Load hash from your password DB.
-                if(existingUser)
-                {
+                if (existingUser) {
 
                     //bcrypt.compare(data.password, existingUser.password, function(err, res) {
 
-                        if(data.password != existingUser.password)
-                        {
-                            errors.push('Username or password is wrong!');
+
+                    if (!existingUser || !existingUser.authenticate(data.password)){
+                        errors.push('Username or password is wrong!');
+                        console.log(errors)
+                    }
+                    else {
+                        if (existingUser.is_logged) {
+                            errors.push('You are already logged in!');
                             console.log(errors)
                         }
-                        else
-                        {
-                            if(existingUser.is_logged)
-                            {
-                                errors.push('You are already logged in!');
-                                console.log(errors)
-                            }
-                            else
-                            {
-                                if(errors.length == 0){
-                                    Character.findOne({user_id: existingUser.user_id}, function (err, character) {
+                        else {
+                            if (errors.length == 0) {
+                                console.log(existingUser._id);
+                                User.findOne({_id: existingUser._id}, function (err, user) {
 
-                                        let conditions = {user_id: existingUser.user_id}
-                                            , update = {$set: {is_logged: true, last_logged: Math.floor(Date.now() / 1000)}}
-                                            , options = {multi: false};
+                                    let conditions = {_id: existingUser._id}
+                                        , update = {$set: {is_logged: true, last_logged: Math.floor(Date.now() / 1000)}}
+                                        , options = {multi: false};
 
-                                        User.update(conditions, update, options, callback);
+                                    User.update(conditions, update, options, callback);
 
-                                        function callback(err, numAffected) {
+                                    function callback(err, numAffected) {
 
-                                            //username = existingUser.username;
-                                            //user_id = existingUser.user_id;
-                                            //coins = character.coins;
-                                            currentPlayer.name = existingUser.username;
-                                            currentPlayer.id = existingUser.user_id;
-                                            currentPlayer.fish = character.fish;
+                                        //username = existingUser.username;
+                                        //user_id = existingUser.user_id;
+                                        //coins = character.coins;
+                                        currentPlayer.name = existingUser.username;
+                                        currentPlayer.id = existingUser._id;
+                                        // currentPlayer.fish = user.character.fish;
 
-                                            //console.log(currentPlayer + "fdklgjdflkgj" + {clients});
-                                        }
-                                    });
+                                        //console.log(currentPlayer + "fdklgjdflkgj" + {clients});
+                                    }
+                                });
 
-                                    console.log("Successfull login");
-                                }
+                                console.log("Successfull login");
                             }
                         }
+                    }
 
-                        let errObj = {
-                            errors: errors
-                        };
+                    let errObj = {
+                        errors: errors
+                    };
 
-                        socket.emit('user login', errObj);
-                  //  });
+                    socket.emit('user login', errObj);
+                    //  });
                 }
-                else
-                {
+                else {
                     errors.push('Username does not exist!');
                     let errObj = {
                         errors: errors
@@ -342,7 +333,7 @@ console.log(data);
 
         socket.on('collect item', (data) => {
 
-            Character_item.findOne({item_id: data.intVal, user_id: currentPlayer.id}, function (err, hasItem) {
+            Character_item.findOne({item_id: data.stringVal, user_id: currentPlayer.id}, function (err, hasItem) {
                 if (hasItem) {
                     console.log("has item");
                     let itemObj = {
@@ -353,19 +344,20 @@ console.log(data);
                     socket.emit('collect item', itemObj);
                 }
                 else {
-                    Item.findOne({item_id: data.intVal}, function (err, itemExists) {
+                    Item.findOne({_id: data.stringVal}, function (err, itemExists) {
+                        console.log(data.stringVal);
                         if (itemExists) {
                             new Character_item({
                                 user_id: currentPlayer.id,
                                 username: currentPlayer.name,
-                                item_id: data.intVal,
+                                item_id: data.stringVal,
                                 name: itemExists.name,
                                 picture: itemExists.picture,
                                 type: itemExists.type,
                                 is_on: false
                             }).save().then(() => {
                                 let itemObj = {
-                                    id: data.intVal,
+                                    id: data.stringVal,
                                     name: "You have successful collected " + itemExists.name
                                 };
 
@@ -395,15 +387,17 @@ console.log(data);
         });
 
         socket.on('get other player items', (data) => {
-            Character_item.find({username: data.name, is_on: true}, function (err, items) {
-
-                socket.emit('get other player items', {username:data.name, items});
+            Character_item.find({username: data.stringVal, is_on: true}, function (err, items) {
+                console.log(data.toString());
+                socket.emit('get other player items', {username: data.stringVal, items});
             })
         });
 
         socket.on('change item', (data) => {
             //console.log(data);
             console.log("Changing items");
+            console.log(data.id);
+            console.log(currentPlayer.id + " user id");
             Character_item.findOne({user_id: currentPlayer.id, item_id: data.id}, function (err, item) {
                 let conditions = {user_id: currentPlayer.id, type: data.type}
                     , update = {$set: {is_on: false}}
@@ -418,7 +412,10 @@ console.log(data);
                     item.save().then(() => {
                         Character_item.find({user_id: currentPlayer.id, is_on: true}, function (err, items) {
                             console.log("gg wp");
-                            socket.to(currentPlayer.roomName).emit('get on other player items', {username: currentPlayer.name, items});
+                            socket.to(currentPlayer.roomName).emit('get on other player items', {
+                                username: currentPlayer.name,
+                                items
+                            });
                             socket.emit('get on items', {items});
                         })
                     });
@@ -430,13 +427,14 @@ console.log(data);
             Character_item.find({user_id: currentPlayer.id, is_on: true}, function (err, items) {
                 //console.log({items});
                 socket.emit('get on items', {items});
+                console.log(items);
             })
         });
 
         socket.on('get on other player items', (data) => {
             Character_item.find({user_id: data.id, is_on: true}, function (err, items) {
                 //console.log({items});
-                socket.emit('get on other player items', {username:data.type, items});
+                socket.emit('get on other player items', {username: data.type, items});
             })
         });
 
@@ -446,7 +444,7 @@ console.log(data);
 
             let checkHasItem = function () {
 
-                Character_item.findOne({item_id: data.intVal, user_id: currentPlayer.id}, function (err, item) {
+                Character_item.findOne({item_id: data.stringVal, user_id: currentPlayer.id}, function (err, item) {
                     console.log("1");
 
                     if (item) {
@@ -460,7 +458,7 @@ console.log(data);
                 return new Promise(() => {
                     Character.findOne({user_id: currentPlayer.id}, function (err, character) {
                         console.log("2");
-                        Item.findOne({item_id: data.intVal}, function (err, item) {
+                        Item.findOne({item_id: data.stringVal}, function (err, item) {
                             itemObj = item;
                             if (character.fish < item.price) {
                                 console.log(character.fish + " | " + item.price)
@@ -474,18 +472,18 @@ console.log(data);
 
             //check if item is premium
             /*
-            let checkPremium = function () {
-                return new Promise(() => {
-                    .findOne({username: data.username}, function (err, existingUsername) {
-                        console.log("2");
-                        if (existingUsername) {
-                            errors.push('Username already exists');
-                            //callback('Username already exists');
-                        }
-                    })
-                })
-            };
-            */
+             let checkPremium = function () {
+             return new Promise(() => {
+             .findOne({username: data.username}, function (err, existingUsername) {
+             console.log("2");
+             if (existingUsername) {
+             errors.push('Username already exists');
+             //callback('Username already exists');
+             }
+             })
+             })
+             };
+             */
 
             let buyItem = function () {
                 console.log("3");
@@ -502,15 +500,15 @@ console.log(data);
                     } else {
                         console.log(itemObj);
 
-                            new Character_item({
-                                user_id: currentPlayer.id,
-                                username: currentPlayer.name,
-                                item_id: data.intVal,
-                                name: itemObj.name,
-                                picture: itemObj.picture,
-                                type: itemObj.type,
-                                is_on: false
-                            }).save();
+                        new Character_item({
+                            user_id: currentPlayer.id,
+                            username: currentPlayer.name,
+                            item_id: data.stringVal,
+                            name: itemObj.name,
+                            picture: itemObj.picture,
+                            type: itemObj.type,
+                            is_on: false
+                        }).save();
 
                         currentPlayer.fish -= itemObj.price;
 
@@ -552,10 +550,14 @@ console.log(data);
         });
 
         socket.on('remove item', (data) => {
-            Character_item.findOne({item_id: data.intVal, user_id: currentPlayer.id, is_on: true}, function (err, item) {
+            Character_item.findOne({
+                item_id: data.stringVal,
+                user_id: currentPlayer.id,
+                is_on: true
+            }, function (err, item) {
 
                 if (item) {
-                    let conditions = {user_id: currentPlayer.id, item_id: data.intVal}
+                    let conditions = {user_id: currentPlayer.id, item_id: data.stringVal}
                         , update = {$set: {is_on: false}}
                         , options = {multi: false};
 
@@ -564,7 +566,10 @@ console.log(data);
                     function callback(err, numAffected) {
                         Character_item.find({user_id: currentPlayer.id, is_on: true}, function (err, items) {
                             //console.log({items});
-                            socket.to(currentPlayer.roomName).emit('get on other player items', {username: currentPlayer.name, items});
+                            socket.to(currentPlayer.roomName).emit('get on other player items', {
+                                username: currentPlayer.name,
+                                items
+                            });
                             socket.emit('get on items', {items});
                         })
                     }
@@ -578,35 +583,37 @@ console.log(data);
 
             currentPlayer.fish += data.intVal;
 
-            let conditions = {user_id: currentPlayer.id}
+            let conditions = {_id: currentPlayer.id}
                 , update = {$set: {fish: currentPlayer.fish}}
                 , options = {multi: false};
 
             Character.update(conditions, update, options, callback);
 
-            function callback(err, numAffected) {}
+            function callback(err, numAffected) {
+            }
         });
 
         socket.on('disconnect', () => {
             //TODO FIX THIS SHIT
-            if(currentPlayer.roomName != "unknown" && clients[currentPlayer.roomName] != undefined) {
+            if (currentPlayer.roomName != "unknown" && clients[currentPlayer.roomName] != undefined) {
                 console.log(currentPlayer.name + "recv: disconnected");
                 socket.to(currentPlayer.roomName).emit('other player disconnected', currentPlayer);
-console.log(clients[currentPlayer.roomName]);
-console.log(clients);
+                console.log(clients[currentPlayer.roomName]);
+                console.log(clients);
                 for (let i = 0; i < clients[currentPlayer.roomName].length; i++) {
                     if (clients[currentPlayer.roomName][i].name === currentPlayer.name) {
                         clients[currentPlayer.roomName].splice(i, 1);
                     }
                 }
 
-                let conditions = {user_id: currentPlayer.id}
+                let conditions = {_id: currentPlayer.id}
                     , update = {$set: {is_logged: false}}
                     , options = {multi: false};
 
                 User.update(conditions, update, options, callback);
 
-                function callback(err, numAffected) {};
+                function callback(err, numAffected) {
+                };
             }
         });
     });
