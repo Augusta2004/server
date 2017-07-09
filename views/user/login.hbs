@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="card">
+        <div class="card-block">
+            <form class="form-horizontal" method="post" action="/user/login">
+                <fieldset>
+                    <legend>Login</legend>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="inputEmail">Email</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control" id="inputEmail" placeholder="Email" name="email" required value={{email}}>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="inputPassword">Password</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" id="inputPassword" placeholder="Password" required name="password">
+                        </div>
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <button type="submit" class="btn btn-success">Login</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,2 +1,42 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<div class="container">
+    <div class="card-group">
+        {{#if isAdmin}}
+        {{#each articles}}
+        <div class="col-md-12">
+            <div class="card card-outline-primary mb-3 text-center">
+                <div class="card-block">
+                    <h4 class="card-title">{{this.title}}</h4>
+                    {{this.content}}
+                    
+                </div>
+                <div class="card-footer text-muted">
+                   Added on {{this.date}} by {{this.author.username}}
+                   <a class="text-success" href="#" role="button">Edit</a>
+                   <a class="text-danger" href="#" role="button">Delete</a>                      
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{/if}}
+
+
+        {{#unless isAdmin}}
+        {{#each articles}}
+        <div class="col-md-12">
+            <div class="card card-outline-primary mb-3 text-center">
+                <div class="card-block">
+                    <h4 class="card-title">{{this.title}}</h4>
+                    {{this.content}}
+                    
+                </div>
+                <div class="card-footer text-muted">
+                   Added on {{this.date}} by {{this.author.username}}
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{/unless}}
+
+
+    </div>
+</div>

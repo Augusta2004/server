@@ -1,0 +1,27 @@
+<div class="container">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>ObjectId</th>
+                <th>E-mail</th>
+                <th>Username</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {{#each users}}
+            <tr>
+                <th scope="row">{{this.id}}</th>
+                <td>{{this.mail}}</td>
+                <td>{{this.username}}</td>
+                <td>
+                    <a class="text-success" href="#" role="button">Edit</a>
+                    <a class="text-danger" href="#" role="button">Ban</a>
+                </td>
+            </tr>
+            {{/each}}
+
+        </tbody>
+    </table>
+</div>

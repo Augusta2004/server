@@ -141,136 +141,135 @@ module.exports = (server) =>{
             socket.to(currentPlayer.roomName).emit('player chat', data);
         });
 
-        socket.on('user register', (data) => {
+        // socket.on('user register', (data) => {
 
-            let errors = new Array();
-            console.log(data);
+        //     let errors = new Array();
+        //     console.log(data);
 
-            let checkMail = function () {
+        //     let checkMail = function () {
 
-                User.findOne({mail: data.mail}, function (err, existingEmail) {
-                    console.log("1");
+        //         User.findOne({mail: data.mail}, function (err, existingEmail) {
+        //             console.log("1");
 
-                    if (existingEmail) {
-                        errors.push('Email already exists');
-                        //callback('Email already exists');
-                    }
-                    else
-                    {
-                        validateMail();
-                    }
-                })
+        //             if (existingEmail) {
+        //                 errors.push('Email already exists');
+        //                 //callback('Email already exists');
+        //             }
+        //             else
+        //             {
+        //                 validateMail();
+        //             }
+        //         })
 
-            };
+        //     };
 
-            let validateMail = function () {
-                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        //     let validateMail = function () {
+        //         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-                    if (!re.test(data.mail)) {
-                        errors.push('Email not valid!');
-                    }
-                    console.log("test " + re.test(data.mail));
-            };
+        //             if (!re.test(data.mail)) {
+        //                 errors.push('Email not valid!');
+        //             }
+        //             console.log("test " + re.test(data.mail));
+        //     };
 
 
-            let checkUsername = function () {
-                return new Promise(() => {
-                    User.findOne({username: data.username}, function (err, existingUsername) {
-                        console.log("2");
-                        if (existingUsername) {
-                            errors.push('Username already exists');
-                            //callback('Username already exists');
-                        }
-                        else
-                        {
-                            var re = /^([a-zA-Z0-9_-]+)$/;
+        //     let checkUsername = function () {
+        //         return new Promise(() => {
+        //             User.findOne({username: data.username}, function (err, existingUsername) {
+        //                 console.log("2");
+        //                 if (existingUsername) {
+        //                     errors.push('Username already exists');
+        //                     //callback('Username already exists');
+        //                 }
+        //                 else
+        //                 {
+        //                     var re = /^([a-zA-Z0-9_-]+)$/;
 
-                            if (!re.test(data.username)) {
-                                errors.push('Username not valid!');
-                            }
-                            else if(data.username.length > 12)
-                            {
-                                errors.push('Username should be at most 12 characters!');
-                            }
-                        }
-                    })
-                })
-            };
+        //                     if (!re.test(data.username)) {
+        //                         errors.push('Username not valid!');
+        //                     }
+        //                     else if(data.username.length > 12)
+        //                     {
+        //                         errors.push('Username should be at most 12 characters!');
+        //                     }
+        //                 }
+        //             })
+        //         })
+        //     };
 
-            let checkPassword = function () {
-                return new Promise(() => {
-                    if(data.password != data.password2)
-                    {
-                        errors.push('Passwords do not match!');
-                    }
-                })
-            };
+        //     let checkPassword = function () {
+        //         return new Promise(() => {
+        //             if(data.password != data.password2)
+        //             {
+        //                 errors.push('Passwords do not match!');
+        //             }
+        //         })
+        //     };
+        //     let registerUser = function () {
+        //         console.log("3");
+        //         return new Promise(() => {
 
-            let registerUser = function () {
-                console.log("3");
-                return new Promise(() => {
+        //             if (errors.length > 0) {
+        //                 console.log(errors);
 
-                    if (errors.length > 0) {
-                        console.log(errors);
+        //                 let errObj = {
+        //                     errors: errors
+        //                 };
 
-                        let errObj = {
-                            errors: errors
-                        };
+        //                 socket.emit('user register', errObj);
+        //             } else {
+        //                 console.log('success');
+        //                 console.log(data);
+        //                 let lastUserId = Counter.findOne();
+        //                 lastUserId.select('user_id');
 
-                        socket.emit('user register', errObj);
-                    } else {
-                        console.log('success');
-                        console.log(data);
-                        let lastUserId = Counter.findOne();
-                        lastUserId.select('user_id');
+        //                 lastUserId.exec((err, counter) => {
+        //                             //console.log(counter.user_id);
 
-                        lastUserId.exec((err, counter) => {
-                                    //console.log(counter.user_id);
+        //                     new User({
+        //                         user_id: counter.user_id + 1,
+        //                         username: data.username,
+        //                         password: data.password,
+        //                         mail: data.mail,
+        //                         sendMail: data.sendMail,
+        //                         date_reg: Math.floor(Date.now() / 1000),
+        //                         is_logged: false
+        //                     }).save();
 
-                            new User({
-                                user_id: counter.user_id + 1,
-                                username: data.username,
-                                password: data.password,
-                                mail: data.mail,
-                                sendMail: data.sendMail,
-                                date_reg: Math.floor(Date.now() / 1000),
-                                is_logged: false
-                            }).save();
+        //                     new Character({
+        //                         user_id: counter.user_id + 1,
+        //                         fish: 500
+        //                     }).save();
 
-                            new Character({
-                                user_id: counter.user_id + 1,
-                                fish: 500
-                            }).save();
+        //                     counter.user_id++;
+        //                     counter.save().then(() => {
+        //                         let errObj = {
+        //                             errors: errors
+        //                         };
 
-                            counter.user_id++;
-                            counter.save().then(() => {
-                                let errObj = {
-                                    errors: errors
-                                };
+        //                         socket.emit('user register', errObj);
+        //                     });
 
-                                socket.emit('user register', errObj);
-                            });
+        //                 })
+        //             }
+        //         })
+        //     };
 
-                        })
-                    }
-                })
-            };
+        //     function asyncFunction(item, cb) {
+        //         setTimeout(() => {
+        //             item();
+        //             //console.log('done with', cb);
+        //             cb();
+        //         }, 15);
+        //     }
 
-            function asyncFunction(item, cb) {
-                setTimeout(() => {
-                    item();
-                    //console.log('done with', cb);
-                    cb();
-                }, 15);
-            }
+        //     let requests = [checkMail, checkUsername, checkPassword, registerUser].reduce((promiseChain, item) => {
+        //         return promiseChain.then(() => new Promise((resolve) => {
+        //             asyncFunction(item, resolve);
+        //         }));
+        //     }, Promise.resolve());
 
-            let requests = [checkMail, checkUsername, checkPassword, registerUser].reduce((promiseChain, item) => {
-                return promiseChain.then(() => new Promise((resolve) => {
-                    asyncFunction(item, resolve);
-                }));
-            }, Promise.resolve());
-
-        });
+        // });
 
         socket.on('user login', (data) => {
             let errors = new Array();
