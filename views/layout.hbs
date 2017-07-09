@@ -40,18 +40,16 @@
         <li class="nav-item float-right">
           <a class="nav-link" href="/admin">Admin</a>
         </li>
-        {{/if}}
-        {{#if user}}
+        {{/if}} {{#if user}}
         <li>
-           <span class="navbar-text">
+          <span class="navbar-text">
               {{user.username}}
            </span>
         </li>
         <li class="nav-item float-right">
           <a class="nav-link active" href="/user/logout">Logout</a>
         </li>
-        {{/if}} 
-        {{#unless user}}
+        {{/if}} {{#unless user}}
         <li class="nav-item float-right">
           <a class="nav-link" href="/user/login">Login</a>
         </li>
@@ -60,7 +58,7 @@
         </li>
         {{/unless}}
         <li class="nav-item float-right">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Play Now</button>
+          <a class="btn btn-outline-success" href="/play">Play Now</a>
         </li>
       </ul>
     </div>

@@ -3,7 +3,7 @@ const aboutController = require('./../controllers/about');
 const userController = require('./../controllers/user');
 const adminController = require('./../controllers/admin');
 const articleController = require('./../controllers/article');
-
+const gameController = require('./../controllers/game');
 
 module.exports = (app) => {
     app.get('/', homeController.index);
@@ -15,6 +15,8 @@ module.exports = (app) => {
     app.get('/user/login', userController.loginGet);
     app.post('/user/login', userController.loginPost);
     app.get('/user/logout', userController.logout);
+
+    app.get('/play',gameController.game);
 
     app.use((req, res, next) => {
         if (req.isAuthenticated()) {
