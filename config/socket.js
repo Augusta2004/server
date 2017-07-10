@@ -124,7 +124,7 @@ module.exports = (server) => {
         });
 
         socket.on('player stop animation', (data) => {
-            currentPlayer.numAnimation = data;
+            currentPlayer.numAnimation = data.intVal;
             socket.to(currentPlayer.roomName).emit('player stop animation', currentPlayer);
             //console.log(data);
         });
