@@ -7,4 +7,5 @@ module.exports = {
             res.render('home/index', { title: 'Polar Adventures', articles: article});
         });
     },
+    
 };

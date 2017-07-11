@@ -4,6 +4,7 @@ const userController = require('./../controllers/user');
 const adminController = require('./../controllers/admin');
 const articleController = require('./../controllers/article');
 const gameController = require('./../controllers/game');
+const itemController = require('./../controllers/item');
 
 module.exports = (app) => {
     app.get('/', homeController.index);
@@ -40,5 +41,8 @@ module.exports = (app) => {
 
     app.get('/admin/article/new',articleController.newArticleGet);
     app.post('/admin/article/new',articleController.newArticlePost);
+
+    app.get('/admin/item/new',itemController.newItemGet);
+    app.post('/admin/item/new',itemController.newItemPost);
 
 };
