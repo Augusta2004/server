@@ -303,7 +303,7 @@ module.exports = (server) => {
                                         //coins = character.coins;
                                         currentPlayer.name = existingUser.username;
                                         currentPlayer.id = existingUser._id;
-                                        // currentPlayer.fish = user.character.fish;
+                                        currentPlayer.fish = user.character.fish;
 
                                         //console.log(currentPlayer + "fdklgjdflkgj" + {clients});
                                     }
@@ -456,12 +456,12 @@ module.exports = (server) => {
 
             let checkFish = function () {
                 return new Promise(() => {
-                    Character.findOne({user_id: currentPlayer.id}, function (err, character) {
+                    User.findOne({_id: currentPlayer.id}, function (err, character) {
                         console.log("2");
-                        Item.findOne({item_id: data.stringVal}, function (err, item) {
+                        Item.findOne({_id: data.stringVal}, function (err, item) {
                             itemObj = item;
-                            if (character.fish < item.price) {
-                                console.log(character.fish + " | " + item.price)
+                            if (character.character.fish < item.price) {
+                                console.log(character.character.fish + " | " + item.price)
                                 errors.push('You do not have enough fish!');
                             }
                         })
@@ -512,15 +512,17 @@ module.exports = (server) => {
 
                         currentPlayer.fish -= itemObj.price;
 
-                        let conditions = {user_id: currentPlayer.id, type: data.type}
-                            , update = {$set: {fish: currentPlayer.fish}}
+                        let conditions = {_id: currentPlayer.id}
+                            , update = {$set: {character: {fish: currentPlayer.fish}}}
                             , options = {multi: true};
 
-                        Character.update(conditions, update, options, callback);
+                        User.update(conditions, update, options, callback);
 
 
                         function callback(err, numAffected) {
                             console.log("bought item");
+
+                            errors.push('Successfully bought item!');
 
                             let errObj = {
                                 errors: errors
@@ -580,14 +582,13 @@ module.exports = (server) => {
         });
 
         socket.on('add fish', (data) => {
-
             currentPlayer.fish += data.intVal;
 
             let conditions = {_id: currentPlayer.id}
-                , update = {$set: {fish: currentPlayer.fish}}
+                , update = {$set: {character: {fish: currentPlayer.fish}}}
                 , options = {multi: false};
 
-            Character.update(conditions, update, options, callback);
+            User.update(conditions, update, options, callback);
 
             function callback(err, numAffected) {
             }
