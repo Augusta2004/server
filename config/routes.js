@@ -8,6 +8,7 @@ const itemController = require('./../controllers/item');
 
 module.exports = (app) => {
     app.get('/', homeController.index);
+    app.get('/page/:id',homeController.page);
     app.get('/about', aboutController.aboutGet);
 
     app.get('/user/register', userController.registerGet);

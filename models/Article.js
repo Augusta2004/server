@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 let User = mongoose.model('User');
 
 let articleSchema = mongoose.Schema({
@@ -7,6 +8,8 @@ let articleSchema = mongoose.Schema({
     author: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     dateAdded: { type: Date, default: Date.now() },
 });
+
+articleSchema.plugin(mongoosePaginate);
 
 articleSchema.method({
     prepareInsert: function () {

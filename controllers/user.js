@@ -23,7 +23,7 @@ module.exports = {
 
             if (errorMsg) {
                 registerArgs.error = errorMsg;
-                res.render('user/register', registerArgs)
+                res.render('user/register', registerArgs);
             } else {
                 let salt = encryption.generateSalt();
                 let passwordHash = encryption.hashPassword(registerArgs.password, salt);
