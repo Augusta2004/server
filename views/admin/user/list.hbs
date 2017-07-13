@@ -12,7 +12,7 @@
 
             {{#each users}}
             <tr>
-                <th scope="row">{{this.id}}</th>
+                <th scope="row"><a href="/user/profile/{{this.id}}">{{this.id}}</a></th>
                 <td>{{this.mail}}</td>
                 <td>{{this.username}}</td>
                 <td>

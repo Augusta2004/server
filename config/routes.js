@@ -18,6 +18,8 @@ module.exports = (app) => {
     app.post('/user/login', userController.loginPost);
     app.get('/user/logout', userController.logout);
 
+    app.get('/user/profile/:id',userController.profile);
+
     app.get('/play',gameController.game);
 
     app.use((req, res, next) => {
