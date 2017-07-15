@@ -4,7 +4,7 @@ const encryption = require('./../config/encryption');
 
 module.exports = {
     registerGet: (req, res) => {
-        res.render('user/register',{title:'Register'});
+        res.render('user/register', { title: 'Register' });
     },
     registerPost: (req, res) => {
         let registerArgs = req.body;
@@ -17,13 +17,13 @@ module.exports = {
                 errorMsg = 'User with the same username exists!';
             } else if (registerArgs.password !== registerArgs.repeatedPassword) {
                 errorMsg = 'Passwords do not match!';
-            }else if(!re.test(registerArgs.email)){
+            } else if (!re.test(registerArgs.email)) {
                 errorMsg = 'Email is not valid';
             }
 
             if (errorMsg) {
                 registerArgs.error = errorMsg;
-                res.render('user/register', registerArgs)
+                res.render('user/register', registerArgs);
             } else {
                 let salt = encryption.generateSalt();
                 let passwordHash = encryption.hashPassword(registerArgs.password, salt);
@@ -61,7 +61,7 @@ module.exports = {
         });
     },
     loginGet: (req, res) => {
-        res.render('user/login',{title:'Login'});
+        res.render('user/login', { title: 'Login' });
     },
     loginPost: (req, res) => {
         let loginArgs = req.body;
@@ -93,5 +93,12 @@ module.exports = {
     logout: (req, res) => {
         req.logOut();
         res.redirect('/');
-    }
+    },
+    profile: (req, res) => {
+        let userId = req.params.id;
+        User.findOne({ _id: userId }).then(user => {
+            res.render('user/profile', { title: user.username, user: user });
+        });
+
+    },
 };
