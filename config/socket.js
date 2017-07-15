@@ -460,9 +460,16 @@ module.exports = (server) => {
                         console.log("2");
                         Item.findOne({_id: data.stringVal}, function (err, item) {
                             itemObj = item;
-                            if (character.character.fish < item.price) {
-                                console.log(character.character.fish + " | " + item.price)
-                                errors.push('You do not have enough fish!');
+                            if(item)
+                            {
+                                if (character.character.fish < item.price) {
+                                    console.log(character.character.fish + " | " + item.price)
+                                    errors.push('You do not have enough fish!');
+                                }
+                            }
+                            else
+                            {
+                                errors.push('Item does not exist!');
                             }
                         })
                     })

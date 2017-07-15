@@ -3,7 +3,7 @@ mongoose.Promise = global.Promise;
 
 module.exports = (config) => {
     mongoose.connect(config.connectionString,
-    {user: 'bobonikstambe', pass: 'IgrA1anI3velikA0*(%', auth:{authdb:"admin"}});
+     {user: 'bobonikstambe', pass: 'IgrA1anI3velikA0*(%', auth:{authdb:"admin"}});
 
     let database = mongoose.connection;
     database.once('open', (error) => {

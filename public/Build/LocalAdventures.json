@@ -1,0 +1,10 @@
+{
+"TOTAL_MEMORY": 268435456,
+"dataUrl": "LocalAdventures.data.unityweb",
+"asmCodeUrl": "LocalAdventures.asm.code.unityweb",
+"asmMemoryUrl": "LocalAdventures.asm.memory.unityweb",
+"asmFrameworkUrl": "LocalAdventures.asm.framework.unityweb",
+"backgroundUrl": "LocalAdventures.jpg",
+"splashScreenStyle": "Light",
+"backgroundColor": "#FFFFFF"
+}
