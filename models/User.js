@@ -8,16 +8,19 @@ let userSchema = mongoose.Schema({
     mail: { type: String, required: true, unique: true },
     sendMail: { type: Boolean },
     date_reg: { type: Date, default: Date.now() },
-    is_logged: { type: Boolean,default:false },
+    is_logged: { type: Boolean, default:false },
     last_logged: { type: Number},
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }],
     banned: { type: Boolean },
     salt: { type: String, required: true },
     articles: { type: [mongoose.Schema.Types.ObjectId], ref: 'Article' },
-
     character: {
-        fish: { type: Number, default:150 }
-    }
+        fish: { type: Number, default:150 },
+        server: { type: String, default: null },
+        update_requests: { type: Boolean, default: false}
+    },
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    socketID: {type: String}
 });
 
 userSchema.method({

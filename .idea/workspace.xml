@@ -2,19 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="443115e8-eded-494c-a90f-521ef42859d2" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/Assets/593a6d34453c7208fb367adf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/Assets/593a9255453c7208fb3685a0" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/Assets/593a92eb453c7208fb3685ca" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/Assets/boots" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/Assets/boxpin" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/Assets/gornishte" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/Assets/hat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/Assets/pin" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/Build/LocalAdventures.asm.code.unityweb" afterPath="$PROJECT_DIR$/public/Build/LocalAdventures.asm.code.unityweb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/Build/LocalAdventures.asm.framework.unityweb" afterPath="$PROJECT_DIR$/public/Build/LocalAdventures.asm.framework.unityweb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/Build/LocalAdventures.asm.memory.unityweb" afterPath="$PROJECT_DIR$/public/Build/LocalAdventures.asm.memory.unityweb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/Build/LocalAdventures.data.unityweb" afterPath="$PROJECT_DIR$/public/Build/LocalAdventures.data.unityweb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database.js" afterPath="$PROJECT_DIR$/config/database.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/routes.js" afterPath="$PROJECT_DIR$/config/routes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/admin.js" afterPath="$PROJECT_DIR$/controllers/admin.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/home.js" afterPath="$PROJECT_DIR$/controllers/home.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/user.js" afterPath="$PROJECT_DIR$/controllers/user.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/Article.js" afterPath="$PROJECT_DIR$/models/Article.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/socket.js" afterPath="$PROJECT_DIR$/config/socket.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/User.js" afterPath="$PROJECT_DIR$/models/User.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package-lock.json" afterPath="$PROJECT_DIR$/package-lock.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/admin/panel.hbs" afterPath="$PROJECT_DIR$/views/admin/panel.hbs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/admin/user/list.hbs" afterPath="$PROJECT_DIR$/views/admin/user/list.hbs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/home/index.hbs" afterPath="$PROJECT_DIR$/views/home/index.hbs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/layout.hbs" afterPath="$PROJECT_DIR$/views/layout.hbs" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -32,11 +39,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="www" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/www">
+      <file leaf-file-name="Friend_request.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/models/Friend_request.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="14" column="50" lean-forward="false" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="50" />
+            <state relative-caret-position="68">
+              <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Character_item.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/character/Character_item.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="13" column="22" lean-forward="false" selection-start-line="13" selection-start-column="22" selection-end-line="13" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -45,20 +62,58 @@
       <file leaf-file-name="socket.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/socket.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="884">
-              <caret line="106" column="13" lean-forward="false" selection-start-line="106" selection-start-column="13" selection-end-line="106" selection-end-column="13" />
+            <state relative-caret-position="17">
+              <caret line="741" column="59" lean-forward="false" selection-start-line="741" selection-start-column="59" selection-end-line="741" selection-end-column="59" />
               <folding>
-                <element signature="e#21619#22730#0" expanded="false" />
+                <element signature="e#741#1695#0" expanded="false" />
+                <element signature="e#1741#3030#0" expanded="false" />
+                <element signature="e#3070#4495#0" expanded="false" />
+                <element signature="e#4548#5353#0" expanded="false" />
+                <element signature="e#5400#5725#0" expanded="false" />
+                <element signature="e#5782#5972#0" expanded="false" />
+                <element signature="e#6019#6196#0" expanded="false" />
+                <element signature="e#6242#9210#0" expanded="false" />
+                <element signature="e#9258#11167#0" expanded="false" />
+                <element signature="e#11219#11445#0" expanded="false" />
+                <element signature="e#11505#11753#0" expanded="false" />
+                <element signature="e#11807#12026#0" expanded="false" />
+                <element signature="e#12092#12333#0" expanded="false" />
+                <element signature="e#12391#12650#0" expanded="false" />
+                <element signature="e#12697#13919#0" expanded="false" />
+                <element signature="e#13963#14178#0" expanded="false" />
+                <element signature="e#14239#14482#0" expanded="false" />
+                <element signature="e#14526#18612#0" expanded="false" />
+                <element signature="e#18659#19770#0" expanded="false" />
+                <element signature="e#19814#20175#0" expanded="false" />
+                <element signature="e#20225#21761#0" expanded="false" />
+                <element signature="e#21810#23173#0" expanded="false" />
+                <element signature="e#23217#24126#0" expanded="false" />
+                <element signature="e#24171#24210#0" expanded="false" />
+                <element signature="e#24262#24492#0" expanded="false" />
+                <element signature="e#24542#26128#0" expanded="false" />
+                <element signature="e#26170#27287#0" expanded="false" />
+                <element signature="e#27330#28134#0" expanded="false" />
+                <element signature="e#28177#29005#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="database.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/config/database.js">
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="7" lean-forward="false" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+            <state relative-caret-position="306">
+              <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="User.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/User.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="19" column="57" lean-forward="false" selection-start-line="19" selection-start-column="57" selection-end-line="19" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -75,36 +130,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>example</find>
-      <find>page</find>
-      <find>documentroot</find>
-      <find>sendfile</find>
-      <find>send</find>
-      <find>bcrypt</find>
-      <find>other players are loaded</find>
-      <find>players loaded</find>
-      <find>socket.emit</find>
-      <find>socket.to</find>
-      <find>saltRounds</find>
-      <find>bcry</find>
-      <find>Char</find>
-      <find>logged</find>
-      <find>collect</find>
-      <find>item does not</find>
-      <find>login</find>
-      <find>get</find>
+      <find>mpath</find>
+      <find>m</find>
+      <find>muri</find>
+      <find>save</find>
+      <find>findOne</find>
+      <find>new</find>
+      <find>serverName</find>
+      <find>character:</find>
+      <find>socketID</find>
+      <find>socket</find>
+      <find>sort</find>
+      <find>update</find>
+      <find>character :</find>
+      <find>.save</find>
       <find>remove</find>
-      <find>get other player items</find>
-      <find>stopani</find>
-      <find>auth</find>
-      <find>Character</find>
-      <find>currentPlayer.fish</find>
-      <find>.fish</find>
-      <find>currentPlayer</find>
-      <find>fish</find>
-      <find>user_id</find>
-      <find>item_id</find>
-      <find>play</find>
+      <find>updateFriendsStatus</find>
+      <find>stringVal</find>
+      <find>save().</find>
+      <find>handle friend</find>
+      <find>SHOW REWUE</find>
+      <find>showRequests</find>
+      <find>updateRequests</find>
+      <find>sendin</find>
+      <find>update_requests</find>
+      <find>SHOW RE</find>
+      <find>SHOW REU</find>
+      <find>showRequests(</find>
+      <find>show friends</find>
+      <find>show request</find>
+      <find>update friend list</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -115,14 +170,12 @@
       <list>
         <option value="$PROJECT_DIR$/config/express.js" />
         <option value="$PROJECT_DIR$/config/passport.js" />
-        <option value="$PROJECT_DIR$/config/routes.js" />
         <option value="$PROJECT_DIR$/models/Character.js" />
         <option value="$PROJECT_DIR$/models/character/Item.js" />
         <option value="$PROJECT_DIR$/models/Counter.js" />
         <option value="$PROJECT_DIR$/bin/www" />
         <option value="$PROJECT_DIR$/controllers/home.js" />
         <option value="$PROJECT_DIR$/views/home/index.hbs" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/models/character/Character.js" />
         <option value="$USER_HOME$/Desktop/httpd.conf" />
         <option value="$USER_HOME$/Desktop/welcome.conf" />
@@ -136,15 +189,22 @@
         <option value="$USER_HOME$/Desktop/Polar Adventures/index.html" />
         <option value="$PROJECT_DIR$/models/character/Character_item.js" />
         <option value="$PROJECT_DIR$/models/Item.js" />
-        <option value="$PROJECT_DIR$/models/User.js" />
         <option value="$PROJECT_DIR$/../../../Polar-Adventures-Files/express.js" />
         <option value="$USER_HOME$/Desktop/Polar Adventures2/index.html" />
         <option value="$USER_HOME$/Desktop/game.hbs" />
         <option value="$PROJECT_DIR$/config/config.js" />
         <option value="$USER_HOME$/Desktop/mongod.conf" />
         <option value="$PROJECT_DIR$/views/game/game.hbs" />
-        <option value="$PROJECT_DIR$/config/socket.js" />
+        <option value="$PROJECT_DIR$/package-lock.json" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/controllers/asset.js" />
+        <option value="$PROJECT_DIR$/config/routes.js" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/models/FriendReQuest.js" />
         <option value="$PROJECT_DIR$/config/database.js" />
+        <option value="$PROJECT_DIR$/models/Friend_request.js" />
+        <option value="$PROJECT_DIR$/models/User.js" />
+        <option value="$PROJECT_DIR$/config/socket.js" />
       </list>
     </option>
   </component>
@@ -185,8 +245,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -213,68 +271,10 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="character" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="config" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -286,6 +286,7 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="JavaScriptPreferStrict" value="false" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
+    <property name="restartRequiresConfirmation" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -473,12 +474,51 @@
       <workItem from="1499952658917" duration="1849000" />
       <workItem from="1499961871974" duration="56000" />
       <workItem from="1500037751825" duration="2858000" />
-      <workItem from="1500120025881" duration="704000" />
+      <workItem from="1500120025881" duration="4332000" />
+      <workItem from="1500131841526" duration="1351000" />
+      <workItem from="1500134688207" duration="631000" />
+      <workItem from="1500163158443" duration="61000" />
+      <workItem from="1500195888870" duration="4231000" />
+      <workItem from="1500233013457" duration="624000" />
+      <workItem from="1500281422557" duration="3638000" />
+      <workItem from="1500371509263" duration="762000" />
+      <workItem from="1500463592288" duration="4076000" />
+      <workItem from="1500540766946" duration="5952000" />
+      <workItem from="1500581055288" duration="9000" />
+      <workItem from="1500587061419" duration="3000" />
+      <workItem from="1500625771448" duration="2238000" />
+      <workItem from="1500629659110" duration="1961000" />
+      <workItem from="1500633769305" duration="10375000" />
+      <workItem from="1500722144765" duration="4497000" />
+      <workItem from="1500817178248" duration="1568000" />
+      <workItem from="1500888467070" duration="2061000" />
+      <workItem from="1500905552616" duration="4893000" />
+      <workItem from="1500972083949" duration="1985000" />
+      <workItem from="1500981285375" duration="6667000" />
+      <workItem from="1501059427232" duration="10518000" />
+      <workItem from="1501150445306" duration="1995000" />
+      <workItem from="1501158264457" duration="3484000" />
+      <workItem from="1501239332590" duration="4824000" />
+      <workItem from="1501251072355" duration="1821000" />
+      <workItem from="1501340229661" duration="7037000" />
+      <workItem from="1501411952838" duration="4115000" />
+      <workItem from="1501422732873" duration="4597000" />
+      <workItem from="1501496049996" duration="5727000" />
+      <workItem from="1501519965930" duration="99000" />
+      <workItem from="1501520090955" duration="8464000" />
+      <workItem from="1501586002893" duration="851000" />
+      <workItem from="1501589969111" duration="4884000" />
+      <workItem from="1501749258966" duration="1417000" />
+      <workItem from="1501759514311" duration="10541000" />
+      <workItem from="1501833054960" duration="5638000" />
+      <workItem from="1501846989067" duration="4293000" />
+      <workItem from="1501927988059" duration="989000" />
+      <workItem from="1501934601067" duration="682000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="225669000" />
+    <option name="totallyTimeSpent" value="368856000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -491,13 +531,12 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15739386" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23567921" sideWeight="0.5029762" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23501578" sideWeight="0.49702382" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1592262" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23404256" sideWeight="0.5059701" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2487725" sideWeight="0.49402985" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -507,81 +546,57 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329653" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="processedProjectFiles" value="true" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="8" />
+      <option name="time" value="11" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="9" lean-forward="true" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/Counter.js" />
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="34" lean-forward="true" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="57" lean-forward="false" selection-start-line="5" selection-start-column="57" selection-end-line="5" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Desktop/cp2/Build/UnityLoader.js" />
     <entry file="file://$USER_HOME$/Desktop/cp2/Build/UnityLoader.js" />
     <entry file="file://$USER_HOME$/Desktop/cp2/index.html" />
     <entry file="file://$USER_HOME$/Desktop/httpd.conf" />
     <entry file="file://$USER_HOME$/Desktop/welcome.conf" />
     <entry file="file://$USER_HOME$/Desktop/index.js" />
-    <entry file="file://$PROJECT_DIR$/config/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="2" lean-forward="false" selection-start-line="22" selection-start-column="2" selection-end-line="22" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/users.js" />
     <entry file="file://$PROJECT_DIR$/routes/index.js" />
-    <entry file="file://$PROJECT_DIR$/controllers/home.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="45" lean-forward="false" selection-start-line="2" selection-start-column="45" selection-end-line="2" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/express/lib/response.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="756">
@@ -595,13 +610,6 @@
     <entry file="file://$USER_HOME$/Desktop/config.js" />
     <entry file="file://$USER_HOME$/Desktop/socket.js" />
     <entry file="file://$USER_HOME$/Desktop/app.js" />
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/character/Character.js" />
     <entry file="file://$PROJECT_DIR$/models/Counter.js" />
     <entry file="file://$PROJECT_DIR$/config/encryption.js">
@@ -618,13 +626,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="26" lean-forward="true" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/Article.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -632,31 +633,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/character/Character_item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="11" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/User.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="43" lean-forward="true" selection-start-line="18" selection-start-column="43" selection-end-line="18" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/controllers/user.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="71" column="52" lean-forward="true" selection-start-line="71" selection-start-column="52" selection-end-line="71" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/Item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="34" lean-forward="false" selection-start-line="2" selection-start-column="34" selection-end-line="2" selection-end-column="34" />
         </state>
       </provider>
     </entry>
@@ -689,26 +669,11 @@
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Desktop/Polar Adventures2/index.html" />
-    <entry file="file://$PROJECT_DIR$/config/express.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="35" lean-forward="false" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Desktop/game.hbs" />
     <entry file="file://$USER_HOME$/Desktop/mongod.conf" />
     <entry file="file://$USER_HOME$/Desktop/database.js" />
     <entry file="file://$USER_HOME$/Desktop/express.js" />
     <entry file="file://$USER_HOME$/Desktop/www" />
-    <entry file="file://$PROJECT_DIR$/bin/www">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="50" lean-forward="false" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -723,6 +688,77 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/www">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="10" lean-forward="false" selection-start-line="6" selection-start-column="10" selection-end-line="6" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/express.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="69">
+          <caret line="23" column="35" lean-forward="false" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/express.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="106" column="0" lean-forward="false" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/home.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="14" lean-forward="false" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/asset.js" />
+    <entry file="file://$PROJECT_DIR$/package-lock.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-14088">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/game.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="2" lean-forward="true" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" column="39" lean-forward="false" selection-start-line="26" selection-start-column="39" selection-end-line="26" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/Item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="34" lean-forward="false" selection-start-line="2" selection-start-column="34" selection-end-line="2" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/views/game/game.hbs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -730,20 +766,79 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/models/character/Character_item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="22" lean-forward="false" selection-start-line="13" selection-start-column="22" selection-end-line="13" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/User.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="57" lean-forward="false" selection-start-line="19" selection-start-column="57" selection-end-line="19" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/socket.io/lib/socket.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="513" column="11" lean-forward="false" selection-start-line="513" selection-start-column="11" selection-end-line="513" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/config/socket.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="884">
-          <caret line="106" column="13" lean-forward="false" selection-start-line="106" selection-start-column="13" selection-end-line="106" selection-end-column="13" />
+        <state relative-caret-position="17">
+          <caret line="741" column="59" lean-forward="false" selection-start-line="741" selection-start-column="59" selection-end-line="741" selection-end-column="59" />
           <folding>
-            <element signature="e#21619#22730#0" expanded="false" />
+            <element signature="e#741#1695#0" expanded="false" />
+            <element signature="e#1741#3030#0" expanded="false" />
+            <element signature="e#3070#4495#0" expanded="false" />
+            <element signature="e#4548#5353#0" expanded="false" />
+            <element signature="e#5400#5725#0" expanded="false" />
+            <element signature="e#5782#5972#0" expanded="false" />
+            <element signature="e#6019#6196#0" expanded="false" />
+            <element signature="e#6242#9210#0" expanded="false" />
+            <element signature="e#9258#11167#0" expanded="false" />
+            <element signature="e#11219#11445#0" expanded="false" />
+            <element signature="e#11505#11753#0" expanded="false" />
+            <element signature="e#11807#12026#0" expanded="false" />
+            <element signature="e#12092#12333#0" expanded="false" />
+            <element signature="e#12391#12650#0" expanded="false" />
+            <element signature="e#12697#13919#0" expanded="false" />
+            <element signature="e#13963#14178#0" expanded="false" />
+            <element signature="e#14239#14482#0" expanded="false" />
+            <element signature="e#14526#18612#0" expanded="false" />
+            <element signature="e#18659#19770#0" expanded="false" />
+            <element signature="e#19814#20175#0" expanded="false" />
+            <element signature="e#20225#21761#0" expanded="false" />
+            <element signature="e#21810#23173#0" expanded="false" />
+            <element signature="e#23217#24126#0" expanded="false" />
+            <element signature="e#24171#24210#0" expanded="false" />
+            <element signature="e#24262#24492#0" expanded="false" />
+            <element signature="e#24542#26128#0" expanded="false" />
+            <element signature="e#26170#27287#0" expanded="false" />
+            <element signature="e#27330#28134#0" expanded="false" />
+            <element signature="e#28177#29005#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/database.js">
+    <entry file="file://$PROJECT_DIR$/models/Friend_request.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="7" lean-forward="false" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+        <state relative-caret-position="68">
+          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="13" />
           <folding />
         </state>
       </provider>

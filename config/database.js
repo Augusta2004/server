@@ -24,6 +24,6 @@ module.exports = (config) => {
     require('./../models/Item');
     require('./../models/character/Character_item');
     require('./../models/Article');
-
+    require('./../models/Friend_request');
 
 };
