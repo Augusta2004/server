@@ -4,6 +4,7 @@ const encryption = require('./../config/encryption');
 
 let userSchema = mongoose.Schema({
     username: { type: String },
+    usernameToLower: { type: String},
     password: { type: String, required: true },
     mail: { type: String, required: true, unique: true },
     sendMail: { type: Boolean },

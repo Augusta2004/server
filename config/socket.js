@@ -14,6 +14,7 @@ module.exports = (server) => {
     //let username = "";
     //let user_id = 0;
     //let coins = 0;
+    resetUsers();
 
     io.on('connection', socket => {
 
@@ -159,13 +160,9 @@ module.exports = (server) => {
         socket.on('user login', (data) => {
             let errors = new Array();
             console.log(data);
-            User.findOne({username: data.username}, function (err, existingUser) {
+            User.findOne({usernameToLower: data.username.toLowerCase()}, function (err, existingUser) {
                 // Load hash from your password DB.
                 if (existingUser) {
-
-                    //bcrypt.compare(data.password, existingUser.password, function(err, res) {
-
-
                     if (!existingUser || !existingUser.authenticate(data.password)){
                         errors.push('Username or password is wrong!');
                         console.log(errors)
@@ -196,7 +193,6 @@ module.exports = (server) => {
                                         currentPlayer.id = existingUser._id;
                                         currentPlayer.fish = user.character.fish;
 
-                                        //console.log(currentPlayer + "fdklgjdflkgj" + {clients});
                                         updateFriendsStatus(); //Update our friends status
                                     }
 
@@ -212,7 +208,6 @@ module.exports = (server) => {
                     };
 
                     socket.emit('user login', errObj);
-                    //  });
                 }
                 else {
                     errors.push('Username does not exist!');
@@ -230,11 +225,10 @@ module.exports = (server) => {
                 if (hasItem) {
                     console.log("has item");
                     let itemObj = {
-                        id: -1,
-                        name: "You already have this item"
+                        stringVal: "You already have this item"
                     };
 
-                    socket.emit('collect item', itemObj);
+                    socket.emit('show dialog', itemObj);
                 }
                 else {
                     Item.findOne({_id: data.stringVal}, function (err, itemExists) {
@@ -250,20 +244,18 @@ module.exports = (server) => {
                                 is_on: false
                             }).save().then(() => {
                                 let itemObj = {
-                                    id: data.stringVal,
-                                    name: "You have successful collected " + itemExists.name
+                                    stringVal: "You have successful collected " + itemExists.name
                                 };
 
-                                socket.emit('collect item', itemObj);
+                                socket.emit('show dialog', itemObj);
                             })
                         }
                         else {
                             let itemObj = {
-                                id: -1,
-                                name: "Item does not exist"
+                                stringVal: "Item does not exist"
                             };
 
-                            socket.emit('collect item', itemObj);
+                            socket.emit('show dialog', itemObj);
                             console.log("Item does not exist");
                         }
                     });
@@ -303,9 +295,10 @@ module.exports = (server) => {
         });
 
         socket.on('get other player items', (data) => {
-            Character_item.find({username: data.stringVal, is_on: true}, function (err, items) {
+            console.log(data);
+            Character_item.find({user_id: data.id, is_on: true}, function (err, items) {
                 console.log(data.toString());
-                socket.emit('get other player items', {username: data.stringVal, items});
+                socket.emit('get other player items', {username: data.name, items});
             })
         });
 
@@ -416,10 +409,10 @@ module.exports = (server) => {
                         console.log(errors);
 
                         let errObj = {
-                            errors: errors
+                            stringVal: errors[0]
                         };
 
-                        socket.emit('buy item', errObj);
+                        socket.emit('show dialog', errObj);
                     } else {
                         console.log(itemObj);
 
@@ -445,13 +438,13 @@ module.exports = (server) => {
                         function callback(err, numAffected) {
                             console.log("bought item");
 
-                            errors.push('Successfully bought item!');
+                            errors.push('Successfully bought ' + itemObj.name + '!');
 
                             let errObj = {
-                                errors: errors
+                                stringVal: errors[0]
                             };
 
-                            socket.emit('buy item', errObj);
+                            socket.emit('show dialog', errObj);
                         }
 
                     }
@@ -544,13 +537,29 @@ module.exports = (server) => {
                                 updateRequests(data.stringVal);
                             });
 
+                            let requestObj = {
+                                stringVal: "Your request has been sent successfully!"
+                            };
+
+                            socket.emit('show dialog', requestObj);
+
                         } else {
                             console.log("Your request hasn't been answered yet");
+                            let request = {
+                                stringVal: "Your request hasn't been answered yet"
+                            };
+
+                            socket.emit('show dialog', request);
                         }
                     });
                 }
                 else{
                     console.log("You're already friends...");
+                    let request = {
+                        stringVal: "You're already friends... dummy"
+                    };
+
+                    socket.emit('show dialog', request);
                 }
             });
         });
@@ -561,6 +570,12 @@ module.exports = (server) => {
             User.findOneAndUpdate({_id: currentPlayer.id}, {$pull: {friends: data.stringVal}}, function(err, currentUser){
                 if(currentUser) {
                     socket.emit('update friend list', {});
+
+                    let request = {
+                        stringVal: "Successfully removed from your friend list"
+                    };
+
+                    socket.emit('show dialog', request);
                 }
             });
 
@@ -626,33 +641,55 @@ module.exports = (server) => {
 
         socket.on('handle request', (data) => {
             Friend_request.findOneAndRemove({'_id' : data.requestId}, (err, request) => {
-                console.log(request);
-                if(data.acceptRequest){
-                    User.findById(request.receiver_id, (err, currentUser) => {
-                        if(currentUser) {
-                            currentUser.friends.push(request.sender_id);
-                            currentUser.save();
+                if(request) {
+                    if (data.acceptRequest) {
+                        User.findById(request.receiver_id, (err, currentUser) => {
+                            if (currentUser) {
+                                currentUser.friends.push(request.sender_id);
+                                currentUser.save();
 
-                            socket.emit('update friend list', {});
-                        }
-                    });
+                                socket.emit('update friend list', {});
 
-                    User.findById(request.sender_id, (err, user) => {
-                        if(user) {
-                            user.friends.push(request.receiver_id);
-                            user.save();
+                                let itemObj = {
+                                    stringVal: "Successfully added to your friend list!"
+                                };
 
-                            if(user.is_logged === true && user.character.server === __serverName){
-                                if(io.sockets.sockets[user.socketID]){
-                                    console.log("SQ 6 MU KAA NA TOA " + user.socketID);
-                                    io.to(user.socketID).emit('update friend list', {});
-                                    io.to(user.socketID).emit('handle friend', {'playerId' : currentPlayer.id, 'playerUsername' : currentPlayer.name, 'addFriend' : true});
+                                socket.emit('show dialog', itemObj);
+                            }
+                        });
 
-                                    socket.emit('handle friend', {'playerId' : request.sender_id, 'playerUsername' : request.sender_username, 'addFriend' : true});
+                        User.findById(request.sender_id, (err, user) => {
+                            if (user) {
+                                user.friends.push(request.receiver_id);
+                                user.save();
+
+                                if (user.is_logged === true && user.character.server === __serverName) {
+                                    if (io.sockets.sockets[user.socketID]) {
+                                        console.log("SQ 6 MU KAA NA TOA " + user.socketID);
+                                        io.to(user.socketID).emit('update friend list', {});
+                                        io.to(user.socketID).emit('handle friend', {
+                                            'playerId': currentPlayer.id,
+                                            'playerUsername': currentPlayer.name,
+                                            'addFriend': true
+                                        });
+
+                                        socket.emit('handle friend', {
+                                            'playerId': request.sender_id,
+                                            'playerUsername': request.sender_username,
+                                            'addFriend': true
+                                        });
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
+                }
+                else{
+                    let itemObj = {
+                        stringVal: "An error occurred!"
+                    };
+
+                    socket.emit('show dialog', itemObj);
                 }
             })
         });
@@ -764,12 +801,25 @@ module.exports = (server) => {
                             , update = {$set: {"character.update_requests": false}}
                             , options = {multi: false};
 
-                        User.update(conditions, update, options, callback);
-                        function callback(err, numAffected) {
+                        User.update(conditions, update, options, callback2);
+                        function callback2(err, numAffected) {
                         }
                     }
                 }
             })
         }
     });
+
+    function resetUsers(){
+        //User.update({_id: '59663a51a788d8034480f9ca' }, {$set: { is_logged: false }});
+        //User.where({'usernameToLower': 'jamal' }).update({$set: { is_logged: false }});
+        var conditions = { 'character.server' : __serverName }
+            , update = { $set: { is_logged : false, 'character.server' : null }}
+            , options = { multi: true };
+
+        User.update(conditions, update, options, callback);
+
+        function callback (err, numAffected) {
+        }
+    }
 };

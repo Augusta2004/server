@@ -10,11 +10,14 @@ module.exports = {
         let registerArgs = req.body;
         let roles = [];
 
-        User.findOne({ email: registerArgs.email }).then(user => {
+        User.findOne({$or: [
+            {mail: registerArgs.email},
+            {usernameToLower: registerArgs.username.toLowerCase()}
+        ]}).then(user => {
             let errorMsg = '';
             let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (user) {
-                errorMsg = 'User with the same username exists!';
+                errorMsg = 'User with the same email or username exists!';
             } else if (registerArgs.password !== registerArgs.repeatedPassword) {
                 errorMsg = 'Passwords do not match!';
             } else if (!re.test(registerArgs.email)) {
@@ -29,9 +32,10 @@ module.exports = {
                 let passwordHash = encryption.hashPassword(registerArgs.password, salt);
 
                 let userObject = {
-                    mail: registerArgs.email,
+                    mail: registerArgs.email.toLowerCase(),
                     password: passwordHash,
                     username: registerArgs.username,
+                    usernameToLower: registerArgs.username.toLowerCase(),
                     salt: salt,
                     banned: false,
                     sendMail: false,
@@ -65,7 +69,7 @@ module.exports = {
     },
     loginPost: (req, res) => {
         let loginArgs = req.body;
-        User.findOne({ mail: loginArgs.email }).then(user => {
+        User.findOne({ mail: loginArgs.email.toLowerCase() }).then(user => {
             if (!user || !user.authenticate(loginArgs.password)) {
                 let errorMsg = 'Either username or password is invalid!';
                 loginArgs.error = errorMsg;
