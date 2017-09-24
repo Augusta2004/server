@@ -28,8 +28,11 @@ module.exports = (server) => {
             console.log(data);
             if (io.sockets.adapter.sids[socket.id][currentPlayer.roomName]) {
 
+                console.log(currentPlayer.roomName.indexOf("Room"));
                 if (currentPlayer.roomName.indexOf("Room") !== -1) {
+                    console.log(clients[currentPlayer.roomName].length);
                     for (let i = 0; i < clients[currentPlayer.roomName].length; i++) {
+                        console.log(clients[currentPlayer.roomName][i].name);
                         if (clients[currentPlayer.roomName][i].name === currentPlayer.name) {
                             clients[currentPlayer.roomName].splice(i, 1);
                         }
