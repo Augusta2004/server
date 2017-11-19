@@ -1,3 +1,9 @@
 body { 
     padding-top: 65px;
 }
+
+a{
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none;
+} /* IE10+ */

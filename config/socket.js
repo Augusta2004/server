@@ -3,6 +3,10 @@ const User = mongoose.model('User');
 const Item = mongoose.model('Item');
 const Character_item = mongoose.model('Character_item');
 const Friend_request = mongoose.model('Friend_request');
+const Code = mongoose.model('Code');
+const Role = mongoose.model('Role');
+
+const encryption = require('./../config/encryption');
 
 module.exports = (server) => {
     const io = require('socket.io').listen(server);
@@ -61,7 +65,11 @@ module.exports = (server) => {
                     let playerConnected = {
                         id: clients[currentPlayer.roomName][i].id,
                         name: clients[currentPlayer.roomName][i].name,
-                        position: clients[currentPlayer.roomName][i].position
+                        animation: clients[currentPlayer.roomName][i].animation,
+                        position: clients[currentPlayer.roomName][i].position,
+                        popularity: clients[currentPlayer.roomName][i].popularity,
+                        movement: clients[currentPlayer.roomName][i].movement,
+                        isWalking: clients[currentPlayer.roomName][i].isWalking
                     };
 
                     //in your current game we need to tell you about the other players
@@ -103,6 +111,8 @@ module.exports = (server) => {
             currentPlayer.position = data.playerSpawnPoint.position;
             currentPlayer.animation = [0, -1];
             currentPlayer.server = __serverName;
+            currentPlayer.movement = 'none';
+            currentPlayer.isWalking = false;
 
             if (clients[currentPlayer.roomName] == undefined) {
                 clients[currentPlayer.roomName] = new Array();
@@ -115,6 +125,7 @@ module.exports = (server) => {
             socket.emit('play', currentPlayer);
 
             socket.to(currentPlayer.roomName).emit('other player connected', currentPlayer);
+            getPopularity(currentPlayer.id);
         });
 
         socket.on('get friend status', (data) => {
@@ -122,7 +133,7 @@ module.exports = (server) => {
             User.findOne({_id: currentPlayer.id}, function (err, existingUser) {
                 if(existingUser) { //If this user exists
                     for(let i=0; i < existingUser.friends.length; i++){ //Loop trough all our friends (if we have any :(  )
-                        if(existingUser.friends[i] == data.id){
+                        if(existingUser.friends[i]._id == data.id){
                             isFriend = true;
                             break;
                         }
@@ -144,12 +155,18 @@ module.exports = (server) => {
             currentPlayer.position = data.position;
             currentPlayer.animation = data.animation;
             currentPlayer.numAnimation = data.numAnimation;
+            currentPlayer.movement = 'walking';
+            currentPlayer.isWalking = true;
+
             socket.to(currentPlayer.roomName).emit('player move', currentPlayer);
         });
 
         socket.on('player stop animation', (data) => {
-            currentPlayer.numAnimation = data.intVal;
-            socket.to(currentPlayer.roomName).emit('player stop animation', currentPlayer);
+            //currentPlayer.numAnimation = data.vec2;
+            currentPlayer.position = [data.vec2.x , data.vec2.y];
+            currentPlayer.isWalking = false;
+            console.log(data.vec2);
+            //socket.to(currentPlayer.roomName).emit('player stop animation', currentPlayer);
             //console.log(data);
         });
 
@@ -158,6 +175,19 @@ module.exports = (server) => {
 
             socket.emit('player chat', data);
             socket.to(currentPlayer.roomName).emit('player chat', data);
+        });
+
+        socket.on('movement', (data) => {
+            if(data.movement !== 'wave'){
+                currentPlayer.animation = [data.x, data.y];
+                currentPlayer.movement = data.movement;
+            }
+            else{
+                currentPlayer.movement = 'none';
+            }
+
+            socket.emit('movement', data);
+            socket.to(currentPlayer.roomName).emit('movement', data);
         });
 
         socket.on('user login', (data) => {
@@ -178,11 +208,18 @@ module.exports = (server) => {
                         else {
                             if (errors.length == 0) {
                                 console.log(existingUser._id);
+
+                                let is_premium = true;
+                                if(existingUser.character.premium_end <= Date.now() / 1000)
+                                {
+                                    is_premium = false;
+                                }
+
                                 User.findOne({_id: existingUser._id}, function (err, user) {
                                     //TODO: Check if this will still work without the above query
 
                                     let conditions = {_id: existingUser._id}
-                                        , update = {$set: {is_logged: true, last_logged: Math.floor(Date.now() / 1000), "character.server" : __serverName, "socketID": socket.id}}
+                                        , update = {$set: {is_logged: true, is_premium: is_premium, last_logged: Math.floor(Date.now() / 1000), "character.server" : __serverName, "socketID": socket.id}}
                                         , options = {multi: false};
 
                                     User.update(conditions, update, options, callback);
@@ -195,6 +232,9 @@ module.exports = (server) => {
                                         currentPlayer.name = existingUser.username;
                                         currentPlayer.id = existingUser._id;
                                         currentPlayer.fish = user.character.fish;
+                                        currentPlayer.is_premium = user.character.is_premium;
+                                        currentPlayer.popularity = user.character.popularity;
+                                        currentPlayer.premium_end = user.character.premium_end;
 
                                         updateFriendsStatus(); //Update our friends status
                                     }
@@ -222,6 +262,64 @@ module.exports = (server) => {
             });
         });
 
+        socket.on('user register', (data) => {
+                let roles = [];
+                let errors = new Array();
+
+                console.log(data);
+                User.findOne({$or: [
+                    {mail: data.mail},
+                    {usernameToLower: data.username.toLowerCase()}
+                ]}).then(user => {
+                    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    if (user) {
+                        errors.push('User with the same email or username exists!');
+                    } else if (data.password !== data.password2) {
+                        errors.push('Passwords do not match!');
+                    } else if (!re.test(data.mail)) {
+                        errors.push('Email is not valid');
+                    }
+
+                    if (errors.length > 0) {
+
+                        console.log(errors);
+
+                        let errObj = {
+                            errors: errors
+                        };
+                        socket.emit('user register', errObj);
+
+                    } else {
+                        let salt = encryption.generateSalt();
+                        let passwordHash = encryption.hashPassword(data.password, salt);
+
+                        let userObject = {
+                            mail: data.mail.toLowerCase(),
+                            password: passwordHash,
+                            username: data.username,
+                            usernameToLower: data.username.toLowerCase(),
+                            salt: salt,
+                            banned: false,
+                            sendMail: false,
+                        };
+
+                        Role.findOne({ name: 'User' }).then(role => {
+                            roles.push(role.id);
+                            userObject.roles = roles;
+                            User.create(userObject).then((user, err) => {
+
+                                console.log(errors);
+
+                                let errObj = {
+                                    errors: errors
+                                };
+                                socket.emit('user register', errObj);
+                            });
+                        });
+                    }
+                });
+        });
+
         socket.on('collect item', (data) => {
 
             Character_item.findOne({item_id: data.stringVal, user_id: currentPlayer.id}, function (err, hasItem) {
@@ -237,21 +335,32 @@ module.exports = (server) => {
                     Item.findOne({_id: data.stringVal}, function (err, itemExists) {
                         console.log(data.stringVal);
                         if (itemExists) {
-                            new Character_item({
-                                user_id: currentPlayer.id,
-                                username: currentPlayer.name,
-                                item_id: data.stringVal,
-                                name: itemExists.name,
-                                picture: itemExists.picture,
-                                type: itemExists.type,
-                                is_on: false
-                            }).save().then(() => {
+                            if(itemExists.is_premium && !currentPlayer.is_premium)
+                            {
                                 let itemObj = {
-                                    stringVal: "You have successful collected " + itemExists.name
+                                    stringVal: "You need to be premium to collect this item!"
                                 };
 
                                 socket.emit('show dialog', itemObj);
-                            })
+                            }
+                            else
+                            {
+                                new Character_item({
+                                    user_id: currentPlayer.id,
+                                    username: currentPlayer.name,
+                                    item_id: data.stringVal,
+                                    name: itemExists.name,
+                                    picture: itemExists.picture,
+                                    type: itemExists.type,
+                                    is_on: false
+                                }).save().then(() => {
+                                    let itemObj = {
+                                        stringVal: "You have successful collected " + itemExists.name
+                                    };
+
+                                    socket.emit('show dialog', itemObj);
+                                })
+                            }
                         }
                         else {
                             let itemObj = {
@@ -271,14 +380,14 @@ module.exports = (server) => {
             Character_item.find({user_id: currentPlayer.id}, function (err, items) {
 
                 socket.emit('get player items', {items});
-            }).sort({ type: 1 }).skip((data.intVal - 1) * 3).limit(3);
+            }).sort({ type: 1 }).skip((data.intVal - 1) * 12).limit(12);
         });
 
         socket.on('get player items by type', (data) => {
             Character_item.find({user_id: currentPlayer.id, type: data.stringVal}, function (err, items) {
 
                 socket.emit('get player items', {items});
-            }).sort({ type: 1 }).skip((data.intVal - 1) * 3).limit(3);
+            }).sort({ type: 1 }).skip((data.intVal - 1) * 12).limit(12);
         });
 
         socket.on('get player items count', () => {
@@ -310,26 +419,39 @@ module.exports = (server) => {
             console.log("Changing items");
             console.log(data.id);
             console.log(currentPlayer.id + " user id");
-            Character_item.findOne({user_id: currentPlayer.id, item_id: data.id}, function (err, item) {
-                let conditions = {user_id: currentPlayer.id, type: data.type}
-                    , update = {$set: {is_on: false}}
-                    , options = {multi: true};
+            Item.findOne({_id: data.id}, (err, item) => {
+                if(item.is_premium && !currentPlayer.is_premium)
+                {
+                    let errObj = {
+                        stringVal: "You are no longer Premium and cannot put this item on!"
+                    };
 
-                Character_item.update(conditions, update, options, callback);
+                    socket.emit('show dialog', errObj);
+                }
+                else
+                {
+                    Character_item.findOne({user_id: currentPlayer.id, item_id: data.id}, (err, character_item) => {
+                        let conditions = {user_id: currentPlayer.id, type: data.type}
+                            , update = {$set: {is_on: false}}
+                            , options = {multi: true};
 
-                function callback(err, numAffected) {
+                        Character_item.update(conditions, update, options, callback);
+
+                        function callback(err, numAffected) {
 
 
-                    item.is_on = true;
-                    item.save().then(() => {
-                        Character_item.find({user_id: currentPlayer.id, is_on: true}, function (err, items) {
-                            console.log("gg wp");
-                            socket.to(currentPlayer.roomName).emit('get on other player items', {
-                                username: currentPlayer.name,
-                                items
+                            character_item.is_on = true;
+                            character_item.save().then(() => {
+                                Character_item.find({user_id: currentPlayer.id, is_on: true}, function (err, items) {
+                                    console.log("gg wp");
+                                    socket.to(currentPlayer.roomName).emit('get on other player items', {
+                                        username: currentPlayer.name,
+                                        items
+                                    });
+                                    socket.emit('get on items', {items});
+                                })
                             });
-                            socket.emit('get on items', {items});
-                        })
+                        }
                     });
                 }
             });
@@ -366,7 +488,7 @@ module.exports = (server) => {
 
             };
 
-            let checkFish = function () {
+            let validateBuy = function () {
                 return new Promise(() => {
                     User.findOne({_id: currentPlayer.id}, function (err, character) {
                         console.log("2");
@@ -378,6 +500,14 @@ module.exports = (server) => {
                                     console.log(character.character.fish + " | " + item.price)
                                     errors.push('You do not have enough fish!');
                                 }
+                                else
+                                {
+                                    if(item.is_premium && !currentPlayer.is_premium)
+                                    {
+                                        errors.push('You need to be Premium to buy this item!');
+                                    }
+                                }
+
                             }
                             else
                             {
@@ -387,7 +517,6 @@ module.exports = (server) => {
                     })
                 })
             };
-
 
             //check if item is premium
             /*
@@ -432,7 +561,7 @@ module.exports = (server) => {
                         currentPlayer.fish -= itemObj.price;
 
                         let conditions = {_id: currentPlayer.id}
-                            , update = {$set: {character: {fish: currentPlayer.fish}}}
+                            , update = {$set: {"character.fish": currentPlayer.fish}}
                             , options = {multi: true};
 
                         User.update(conditions, update, options, callback);
@@ -462,7 +591,7 @@ module.exports = (server) => {
                 }, 15);
             }
 
-            let requests = [checkHasItem, checkFish, buyItem].reduce((promiseChain, item) => {
+            let requests = [checkHasItem, validateBuy, buyItem].reduce((promiseChain, item) => {
                 return promiseChain.then(() => new Promise((resolve) => {
                     asyncFunction(item, resolve);
                 }));
@@ -516,9 +645,9 @@ module.exports = (server) => {
         socket.on('friend request', (data) => {
             User.findOne({
                 _id : currentPlayer.id,
-                friends: {
-                    "$in": [data.stringVal]
-                }
+                "friends._id": data.stringVal
+
+                //$in: {"friends" : {_id: data.stringVal}}
             }, (err, friend) =>{
 
                 if(friend == null) {
@@ -570,9 +699,23 @@ module.exports = (server) => {
         socket.on('remove friend', (data) => {
             console.log(data);
 
-            User.findOneAndUpdate({_id: currentPlayer.id}, {$pull: {friends: data.stringVal}}, function(err, currentUser){
+            User.findOneAndUpdate({_id: currentPlayer.id}, {/*"$pull": {friends : {_id : new mongoose.Types.ObjectId(data.stringVal)}}*/}, function(err, currentUser){
                 if(currentUser) {
+
+                    let result = currentUser.friends.filter(function( obj ) {
+                        return obj._id == data.stringVal;
+                    });
+                    console.log(result[0].popularity);
+                    //let index = currentUser.friends.map(function(e) { return e._id; }).indexOf(result[0]._id);
+                    let index = currentUser.friends.findIndex(x => x._id === result[0]._id);
+                    console.log("Index1:" + index);
+                    console.log(result[0]._id)
+                    currentUser.friends.splice(index, 1);
+                    currentUser.character.popularity -= result[0].popularity;
+                    currentUser.save();
+
                     socket.emit('update friend list', {});
+                    getPopularity(currentPlayer.id);
 
                     let request = {
                         stringVal: "Successfully removed from your friend list"
@@ -582,9 +725,19 @@ module.exports = (server) => {
                 }
             });
 
-
-            User.findOneAndUpdate({_id: data.stringVal}, {$pull: {friends: currentPlayer.id}}, function(err, user){
+            User.findOneAndUpdate({_id: data.stringVal} , {},/*{"$pull": {friends : {_id : new mongoose.Types.ObjectId(currentPlayer.id)}}},*/ function(err, user){
                 if(user) {
+                    let result2 = user.friends.filter(function( obj2 ) {
+                        return obj2._id == currentPlayer.id.toString();
+                    });
+                    console.log(result2 + "GG WP");
+                    let index = user.friends.findIndex(i => i._id == currentPlayer.id.toString());
+                    console.log("Index2:" + index);
+                    user.friends.splice(index, 1);
+                    user.character.popularity -= result2[0].popularity;
+                    user.save();
+
+                    //OTHER PLayer
                     if (user.is_logged === true && user.character.server === __serverName) {
                         if (io.sockets.sockets[user.socketID]) {
                             io.to(user.socketID).emit('update friend list', {});
@@ -601,6 +754,8 @@ module.exports = (server) => {
                                 'addFriend': false
                             });
 
+                            getPopularity(user._id, user.socketID);
+
                             console.log("gg wp");
                         }
                     }
@@ -608,20 +763,20 @@ module.exports = (server) => {
             });
         });
 
-        socket.on('show friends', () => {
+        socket.on('show friends', (data) => {
             console.log("SHOW FRIENDS");
+            console.log(data.intVal);
             User.findOne({'_id': currentPlayer.id}, 'friends', (err, userFriends) => {
                 let showFriends  = [];
                 if(userFriends.friends.length > 0){
                     User.find({ _id: { $in: userFriends.friends}}, function (err, friends) {
 
                         friends.forEach((friend) => {
-                            console.log(friend.character.server);
                             showFriends.push({'username' : friend.username, 'id' : friend._id, 'is_logged' : friend.is_logged, 'server' : friend.character.server});
                         });
 
                         socket.emit('show friends', {showFriends});
-                    }).sort([['is_logged', -1], ['username', 1]])
+                    }).sort([['is_logged', -1], ['username', 1]]).skip((data.intVal - 1) * 10).limit(10)
                 }
                 else{
                     socket.emit('show friends', {showFriends});
@@ -629,8 +784,29 @@ module.exports = (server) => {
             })
         });
 
-        socket.on('show requests', () => {
-            showRequests();
+        socket.on('get friends count', () => {
+            User.findOne({'_id': currentPlayer.id}, 'friends', (err, userFriends) => {
+                let count = userFriends.friends.length;
+                console.log(count)
+                socket.emit('get friends count', {count})
+            });
+
+
+        });
+
+        socket.on('show requests', (data) => {
+            showRequests(false, null, null, data.intVal);
+            console.log(data.intVal)
+        });
+
+        socket.on('get requests count', () => {
+            Friend_request.find({'receiver_id': currentPlayer.id}, '_id', (err, requests) => {
+                let count = requests.length;
+                console.log("COUNT REQUESTS" + count)
+                socket.emit('get requests count', {count})
+            });
+
+
         });
 
         socket.on('check request update', () => {
@@ -648,41 +824,59 @@ module.exports = (server) => {
                     if (data.acceptRequest) {
                         User.findById(request.receiver_id, (err, currentUser) => {
                             if (currentUser) {
-                                currentUser.friends.push(request.sender_id);
-                                currentUser.save();
+                                User.findById(request.sender_id, (err, user) => {
+                                    if (user) {
+                                        let myPopularity = currentUser.character.popularity;
+                                        let otherPopularity = user.character.popularity;
 
-                                socket.emit('update friend list', {});
+                                        let giveMePopularity = Math.ceil(otherPopularity / 10);
+                                        let giveHimPopularity = Math.ceil(myPopularity / 10);
 
-                                let itemObj = {
-                                    stringVal: "Successfully added to your friend list!"
-                                };
+                                        let friendArr = {_id:mongoose.Types.ObjectId(request.sender_id), popularity: giveMePopularity};
 
-                                socket.emit('show dialog', itemObj);
-                            }
-                        });
+                                        currentUser.friends.push(friendArr);
+                                        currentUser.character.popularity += giveMePopularity;
+                                        currentUser.save();
 
-                        User.findById(request.sender_id, (err, user) => {
-                            if (user) {
-                                user.friends.push(request.receiver_id);
-                                user.save();
+                                        socket.emit('update friend list', {});
 
-                                if (user.is_logged === true && user.character.server === __serverName) {
-                                    if (io.sockets.sockets[user.socketID]) {
-                                        console.log("SQ 6 MU KAA NA TOA " + user.socketID);
-                                        io.to(user.socketID).emit('update friend list', {});
-                                        io.to(user.socketID).emit('handle friend', {
-                                            'playerId': currentPlayer.id,
-                                            'playerUsername': currentPlayer.name,
-                                            'addFriend': true
-                                        });
+                                        let itemObj = {
+                                            stringVal: "Successfully added to your friend list!"
+                                        };
 
-                                        socket.emit('handle friend', {
-                                            'playerId': request.sender_id,
-                                            'playerUsername': request.sender_username,
-                                            'addFriend': true
-                                        });
+                                        socket.emit('show dialog', itemObj);
+                                        getPopularity(currentPlayer.id);
+
+                                        ////OTHER USER
+                                        let friendArr2 = {_id:mongoose.Types.ObjectId(request.receiver_id), popularity: giveHimPopularity};
+                                        user.character.popularity += giveHimPopularity;
+                                        user.friends.push(friendArr2);
+                                        user.save();
+
+                                        console.log("Give me:" + giveMePopularity);
+                                        console.log("Give him:" + giveHimPopularity);
+
+                                        if (user.is_logged === true && user.character.server === __serverName) {
+                                            if (io.sockets.sockets[user.socketID]) {
+                                                console.log("SQ 6 MU KAA NA TOA " + user.socketID);
+                                                io.to(user.socketID).emit('update friend list', {});
+                                                io.to(user.socketID).emit('handle friend', {
+                                                    'playerId': currentPlayer.id,
+                                                    'playerUsername': currentPlayer.name,
+                                                    'addFriend': true
+                                                });
+
+                                                socket.emit('handle friend', {
+                                                    'playerId': request.sender_id,
+                                                    'playerUsername': request.sender_username,
+                                                    'addFriend': true
+                                                });
+
+                                                getPopularity(request.sender_id, user.socketID);
+                                            }
+                                        }
                                     }
-                                }
+                                });
                             }
                         });
                     }
@@ -697,19 +891,136 @@ module.exports = (server) => {
             })
         });
 
+        socket.on('show character info', (data) => {
+            console.log(data);
+
+            User.findOne({'_id': data.stringVal}, (err, user) => {
+
+                if(user){
+                    var days =  (new Date().getTime() - new Date(user.date_reg).getTime()) / 1000 / 60 / 60 / 24;
+                    days = Math.floor(days);
+                    if(user.is_logged){
+                        if(user.character.server == __serverName){
+
+                            for(var propertyName in clients) {
+                                clients[propertyName].forEach((value, index) => {
+                                    if(value.name == user.username)
+                                    {
+                                        let dialogText = {
+                                            stringVal: "This bear is " + days + " days old \nBear in " + propertyName
+                                        };
+
+                                        //TODO: Check if this player is playing any game, otherwise tell us his room
+
+                                        socket.emit('show dialog', dialogText);
+
+                                        return;
+                                    }
+                                })
+                             }
+                        }
+                        else{
+                            let dialogText = {
+                                stringVal: "This Bear is " + days + " days old \nBear in server " + user.character.server
+                            };
+
+                            socket.emit('show dialog', dialogText);
+                        }
+                    }
+                    else{
+                        let dialogText = {
+                            stringVal: "This Bear is " + days + " days old"
+                        };
+
+                        socket.emit('show dialog', dialogText);
+                    }
+                }
+            })
+        });
+
+        socket.on('check premium code', (data) => {
+            let Exp = /^[0-9a-zA-Z]+$/;
+            if(data.stringVal.match(Exp))
+            {
+                data.stringVal = data.stringVal.toLowerCase();
+                console.log(data.stringVal)
+                Code.findOneAndRemove({'code': data.stringVal}, (err, code) => {
+                    console.log(code);
+                    if(code)
+                    {
+                        let premium_end = 0;
+                        if(currentPlayer.premium_end < Math.floor(Date.now() / 1000))
+                        {
+                            premium_end = (Math.floor(Date.now() / 1000)) + (code.days * 24*60*60);
+                        }
+                        else
+                        {
+                            premium_end = currentPlayer.premium_end + (code.days * 24*60*60);
+                        }
+
+                        currentPlayer.premium_end = premium_end;
+
+                        let conditions = {_id: currentPlayer.id}
+                            , update = {$set: {"character.premium_end": premium_end, "character.is_premium": true}}
+                            , options = {multi: false};
+
+                        User.update(conditions, update, options, callback);
+
+                        function callback(err, numAffected) {
+                        }
+
+
+                        var monthNames = [
+                            "January", "February", "March",
+                            "April", "May", "June", "July",
+                            "August", "September", "October",
+                            "November", "December"
+                        ];
+
+                        let date_end = new Date(premium_end * 1000);
+                        let monthIndex = date_end.getMonth();
+                        let year = date_end.getFullYear();
+                        let day = date_end.getDate();
+                        let hours = date_end.getHours();
+                        let minutes = "0" + date_end.getMinutes();
+
+                        let codeObj = {
+                            stringVal: "Yay! You successfully purchased premium! The end date is " + monthNames[monthIndex] + " " + day + " " + year + " " + hours + ":" + minutes
+                        };
+
+                        socket.emit('show dialog', codeObj);
+                    }
+                    else
+                    {
+                        let codeObj = {
+                            stringVal: "Oops! Code invalid, please check it again!"
+                        };
+
+                        socket.emit('show dialog', codeObj);
+                    }
+                });
+            }
+        });
+
         socket.on('disconnect', () => {
             //TODO: FIX THIS SHIT
 
             //TODO: remove server from USER.CHARACTER
-            if (currentPlayer.roomName != "unknown" && clients[currentPlayer.roomName] != undefined) {
+            console.log(clients[currentPlayer.roomName]);
+            console.log(currentPlayer.roomName);
+            if (currentPlayer.roomName != "unknown" ) {
                 console.log(currentPlayer.name + "recv: disconnected");
                 socket.to(currentPlayer.roomName).emit('other player disconnected', currentPlayer);
                 updateFriendsStatus();
                 console.log(clients[currentPlayer.roomName]);
                 console.log(clients);
-                for (let i = 0; i < clients[currentPlayer.roomName].length; i++) {
-                    if (clients[currentPlayer.roomName][i].name === currentPlayer.name) {
-                        clients[currentPlayer.roomName].splice(i, 1);
+
+                if(clients[currentPlayer.roomName] != undefined)
+                {
+                    for (let i = 0; i < clients[currentPlayer.roomName].length; i++) {
+                        if (clients[currentPlayer.roomName][i].name === currentPlayer.name) {
+                            clients[currentPlayer.roomName].splice(i, 1);
+                        }
                     }
                 }
 
@@ -763,7 +1074,7 @@ module.exports = (server) => {
             })
         }
 
-        function showRequests(update_requests = false, user_id = null, socketID = null){
+        function showRequests(update_requests = false, user_id = null, socketID = null, page = 1){
             console.log("SHOW REQUESTS");
             if(user_id == null){
                 user_id = currentPlayer.id;
@@ -771,6 +1082,7 @@ module.exports = (server) => {
 
             Friend_request.find({'receiver_id': user_id}, (err, friendRequests) => {
                 console.log(friendRequests.length);
+                console.log(friendRequests);
                 if(friendRequests.length > 0){
                     let showRequests  = [];
 
@@ -809,7 +1121,26 @@ module.exports = (server) => {
                         }
                     }
                 }
-            })
+            }).skip((page - 1) * 10).limit(10)
+        }
+
+        function getPopularity (id, socketId = null) {
+            User.findById(id, (err, myUser) => {
+
+                let popularity = myUser.character.popularity;
+
+                if(id == currentPlayer.id){
+                    socket.emit('get popularity', {intVal: popularity, stringVal: currentPlayer.name});
+
+                    if(currentPlayer.roomName.indexOf("Room") > -1){
+                        socket.to(currentPlayer.roomName).emit('get popularity', {intVal: popularity, stringVal: currentPlayer.name});
+                    }
+                }
+                else if(socketId != null){
+                    io.to(socketId).emit('get popularity', {intVal: popularity, stringVal: user.username});
+                }
+
+            }).select("character.popularity -_id")
         }
     });
 

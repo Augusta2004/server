@@ -18,9 +18,12 @@ let userSchema = mongoose.Schema({
     character: {
         fish: { type: Number, default:150 },
         server: { type: String, default: null },
-        update_requests: { type: Boolean, default: false}
+        update_requests: { type: Boolean, default: false},
+        popularity: {type: Number, default: 1},
+        is_premium: {type: Boolean, default: false},
+        premium_end: {type: Number, default: 0}
     },
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    friends: [{_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, popularity: {type: Number}}],
     socketID: {type: String}
 });
 
