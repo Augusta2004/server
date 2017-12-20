@@ -5,6 +5,8 @@ const Character_item = mongoose.model('Character_item');
 const Friend_request = mongoose.model('Friend_request');
 const Code = mongoose.model('Code');
 const Role = mongoose.model('Role');
+const Ring = mongoose.model('Ring');
+const Ring_shop = mongoose.model('Ring_shop');
 
 const encryption = require('./../config/encryption');
 
@@ -21,7 +23,6 @@ module.exports = (server) => {
     resetUsers();
 
     io.on('connection', socket => {
-
         console.log('a user connected');
 
         let currentPlayer = {};
@@ -165,7 +166,7 @@ module.exports = (server) => {
             //currentPlayer.numAnimation = data.vec2;
             currentPlayer.position = [data.vec2.x , data.vec2.y];
             currentPlayer.isWalking = false;
-            console.log(data.vec2);
+            //console.log(data.vec2);
             //socket.to(currentPlayer.roomName).emit('player stop animation', currentPlayer);
             //console.log(data);
         });
@@ -190,6 +191,10 @@ module.exports = (server) => {
             socket.to(currentPlayer.roomName).emit('movement', data);
         });
 
+        socket.on('login to server', (data) => {
+            loginUser(data.stringVal);
+        });
+
         socket.on('user login', (data) => {
             let errors = new Array();
             console.log(data);
@@ -208,7 +213,7 @@ module.exports = (server) => {
                         else {
                             if (errors.length == 0) {
                                 console.log(existingUser._id);
-
+                                /*
                                 let is_premium = true;
                                 if(existingUser.character.premium_end <= Date.now() / 1000)
                                 {
@@ -240,7 +245,9 @@ module.exports = (server) => {
                                     }
 
                                 });
-
+                                */
+                                errors.push('-1');
+                                errors.push(existingUser._id);
                                 console.log("Successfull login");
                             }
                         }
@@ -444,11 +451,26 @@ module.exports = (server) => {
                             character_item.save().then(() => {
                                 Character_item.find({user_id: currentPlayer.id, is_on: true}, function (err, items) {
                                     console.log("gg wp");
-                                    socket.to(currentPlayer.roomName).emit('get on other player items', {
+                                    let newObjItem = {
+                                        _id: item._id,
+                                        item_id: item._id,
+                                        name: item.name,
+                                        picture: item.picture,
+                                        price: item.price,
+                                        is_premium: item.is_premium,
+                                        type: item.type,
+                                        changeStatus: "changeToOn"
+                                    };
+
+                                    let newItem = {"item" : [newObjItem]};
+
+                                    socket.to(currentPlayer.roomName).emit('change other player item', {  //get on other player items
                                         username: currentPlayer.name,
-                                        items
+                                        newItem
                                     });
-                                    socket.emit('get on items', {items});
+
+                                    socket.emit('change on item', newItem);
+                                    //socket.emit('get on items', {items});
                                 })
                             });
                         }
@@ -577,6 +599,7 @@ module.exports = (server) => {
                             };
 
                             socket.emit('show dialog', errObj);
+                            socket.emit('update fish', {intVal: currentPlayer.fish});
                         }
 
                     }
@@ -615,12 +638,27 @@ module.exports = (server) => {
 
                     function callback(err, numAffected) {
                         Character_item.find({user_id: currentPlayer.id, is_on: true}, function (err, items) {
-                            //console.log({items});
-                            socket.to(currentPlayer.roomName).emit('get on other player items', {
+                            console.log({item});
+
+                            let newObjItem = {
+                                _id: item._id,
+                                item_id: item._id,
+                                name: item.name,
+                                picture: item.picture,
+                                price: item.price,
+                                is_premium: item.is_premium,
+                                type: item.type,
+                                changeStatus: "changeToOff"
+                            };
+
+                            let newItem = {"item" : [newObjItem]};
+
+                            socket.to(currentPlayer.roomName).emit('change other player item', {
                                 username: currentPlayer.name,
-                                items
+                                newItem
                             });
-                            socket.emit('get on items', {items});
+                            socket.emit('change on item', {newItem});
+                            //socket.emit('get on items', {items});
                         })
                     }
                 }
@@ -959,6 +997,7 @@ module.exports = (server) => {
                         }
 
                         currentPlayer.premium_end = premium_end;
+                        currentPlayer.is_premium = true;
 
                         let conditions = {_id: currentPlayer.id}
                             , update = {$set: {"character.premium_end": premium_end, "character.is_premium": true}}
@@ -970,7 +1009,7 @@ module.exports = (server) => {
                         }
 
 
-                        var monthNames = [
+                        let monthNames = [
                             "January", "February", "March",
                             "April", "May", "June", "July",
                             "August", "September", "October",
@@ -982,12 +1021,17 @@ module.exports = (server) => {
                         let year = date_end.getFullYear();
                         let day = date_end.getDate();
                         let hours = date_end.getHours();
-                        let minutes = "0" + date_end.getMinutes();
+                        let minutes = date_end.getMinutes();
+
+                        if(minutes < 10){
+                            minutes = "0" + minutes
+                        }
 
                         let codeObj = {
                             stringVal: "Yay! You successfully purchased premium! The end date is " + monthNames[monthIndex] + " " + day + " " + year + " " + hours + ":" + minutes
                         };
 
+                        getPremiumInfo();
                         socket.emit('show dialog', codeObj);
                     }
                     else
@@ -1000,6 +1044,155 @@ module.exports = (server) => {
                     }
                 });
             }
+        });
+
+        socket.on('get premium info', () => {
+            getPremiumInfo();
+        });
+
+        socket.on('premium purchase', (data) => {
+            let days = data.days;
+            generatePremiumCode(days);
+        });
+
+        socket.on('change ring', (data) => {
+            let proceed = false;
+            let bought = true;
+
+           if(data.stringVal === 'popularity'){
+                if(currentPlayer.popularity > 25){
+                    proceed = true;
+                    bought = false;
+                }
+           }else if(data.stringVal === 'premium')
+           {
+                if(currentPlayer.is_premium){
+                    proceed = true;
+                    bought = false;
+                }
+           }
+           else if(data.stringVal === 'none'){
+               proceed = true;
+               bought = false;
+           }
+           else {
+               proceed = true;
+               bought = true;
+           }
+
+
+           if(proceed){
+               if(bought){
+                    Ring.findOne({user_id: currentPlayer.id, ring_name: data.stringVal}, function(err, myRing){
+                        if(myRing){
+                            currentPlayer.ring = data.stringVal;
+
+                            User.findOneAndUpdate({_id: currentPlayer.id}, {$set:{'character.ring' : currentPlayer.ring}},function(err, doc){
+                                if(doc){
+                                    let objRing = {
+                                        stringVal : currentPlayer.name,
+                                        intVal : currentPlayer.popularity,
+                                        stringVal2 : currentPlayer.ring
+                                    };
+
+                                    socket.to(currentPlayer.roomName).emit('change ring', objRing);
+                                    socket.emit('change ring', objRing);
+                                }
+                            });
+                        }
+                    })
+               }else{
+                   currentPlayer.ring = data.stringVal;
+
+                   User.findOneAndUpdate({_id: currentPlayer.id}, {$set:{'character.ring' : currentPlayer.ring}},function(err, doc){
+                       if(doc){
+                           let objRing = {
+                               stringVal : currentPlayer.name,
+                               intVal : currentPlayer.popularity,
+                               stringVal2 : currentPlayer.ring
+                           };
+
+                           socket.to(currentPlayer.roomName).emit('change ring', objRing);
+                           socket.emit('change ring', objRing);
+                       }
+                   });
+               }
+           }
+        });
+
+        socket.on('buy ring', (data) => {
+           Ring_shop.findOne({_id: data.stringVal}, function(err, ringShop){
+               if(ringShop){
+                    Ring.findOne({ring_name: ringShop.ring_name, user_id: currentPlayer.id}, function(err2, myRing){
+                        if(!myRing){
+                            if((ringShop.is_premium && currentPlayer.is_premium) || !ringShop.is_premium) {
+                                if (ringShop.price <= currentPlayer.fish) {
+                                    let newRing = new Ring({
+                                        user_id: currentPlayer.id,
+                                        ring_type: ringShop.ring_type,
+                                        ring_name: ringShop.ring_name
+                                    });
+
+                                    newRing.save((err, results) => {
+                                        console.log("bought ring");
+
+                                        currentPlayer.fish -= ringShop.price;
+
+                                        let conditions = {_id: currentPlayer.id}
+                                            , update = {$set: {"character.fish": currentPlayer.fish}}
+                                            , options = {multi: false};
+
+                                        User.update(conditions, update, options, callback);
+
+                                        function callback(err, numAffected) {
+                                            let itemObj = {
+                                                stringVal: "You have successful bought " + ringShop.ring_name + " ring!"
+                                            };
+
+                                            socket.emit('show dialog', itemObj);
+                                            socket.emit('update fish', {intVal: currentPlayer.fish});
+                                        }
+                                    })
+                                } else {
+                                    let itemObj = {
+                                        stringVal: "You don't have enough fish"
+                                    };
+
+                                    socket.emit('show dialog', itemObj);
+                                }
+                            }
+                            else{
+                                let itemObj = {
+                                    stringVal: "You need to be premium"
+                                };
+
+                                socket.emit('show dialog', itemObj);
+                            }
+                        }else{
+                            let itemObj = {
+                                stringVal: "You already have this ring"
+                            };
+
+                            socket.emit('show dialog', itemObj);
+                        }
+                    })
+               }
+               else{
+                   let itemObj = {
+                       stringVal: "Ring with this id does not exist"
+                   };
+
+                   socket.emit('show dialog', itemObj);
+               }
+           })
+        });
+
+        socket.on('get my rings', () => {
+            Ring.find({user_id: currentPlayer.id}, function(err, myRings){
+                if(myRings.length > 0){
+                    socket.emit('get my rings', {myRings});
+                }
+            })
         });
 
         socket.on('disconnect', () => {
@@ -1034,6 +1227,63 @@ module.exports = (server) => {
                 }
             }
         });
+
+        function getPremiumInfo(){
+            if(currentPlayer.is_premium)
+            {
+                let monthNames = [
+                    "January", "February", "March",
+                    "April", "May", "June", "July",
+                    "August", "September", "October",
+                    "November", "December"
+                ];
+
+                let date_end = new Date(currentPlayer.premium_end * 1000);
+                let monthIndex = date_end.getMonth();
+                let year = date_end.getFullYear();
+                let day = date_end.getDate();
+                let hours = date_end.getHours();
+                let minutes = date_end.getMinutes();
+
+                if(minutes < 10){
+                    minutes = "0" + minutes
+                }
+
+                let infoObj = {
+                    stringVal: "Your premium ends at \n" + monthNames[monthIndex] + " " + day + " " + year + " " + hours + ":" + minutes
+                };
+
+                socket.emit("get premium info", infoObj);
+            }
+        }
+
+        function generatePremiumCode(days){
+            let premiumCode = "";
+            let possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (let i = 0; i < 6; i++) {
+                premiumCode += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+
+            Code.findOne({code: premiumCode}, (err, checkedCode) => {
+                console.log(premiumCode);
+                if(checkedCode){
+                    generatePremiumCode();
+                }
+                else {
+                    let newCode = new Code({
+                     code: premiumCode,
+                     days: days,
+                     mail: 'admin@mail.bg' //insert papypal's mail
+                     });
+
+                     newCode.save((err, results) => {
+                        console.log(results);
+                     })
+
+                }
+            });
+        }
 
         function updateFriendsStatus() {
             User.findOne({'_id': currentPlayer.id}, 'friends', (err, userFriends) => {
@@ -1130,17 +1380,54 @@ module.exports = (server) => {
                 let popularity = myUser.character.popularity;
 
                 if(id == currentPlayer.id){
-                    socket.emit('get popularity', {intVal: popularity, stringVal: currentPlayer.name});
+                    socket.emit('get popularity', {intVal: popularity, stringVal: currentPlayer.name, stringVal2: currentPlayer.ring});
 
                     if(currentPlayer.roomName.indexOf("Room") > -1){
-                        socket.to(currentPlayer.roomName).emit('get popularity', {intVal: popularity, stringVal: currentPlayer.name});
+                        socket.to(currentPlayer.roomName).emit('get popularity', {intVal: popularity, stringVal: currentPlayer.name, stringVal2: currentPlayer.ring});
                     }
                 }
                 else if(socketId != null){
-                    io.to(socketId).emit('get popularity', {intVal: popularity, stringVal: user.username});
+                    io.to(socketId).emit('get popularity', {intVal: popularity, stringVal: user.username, stringVal2: user.character.ring});
                 }
 
-            }).select("character.popularity -_id")
+            })
+        }
+
+        function loginUser(user_id){
+            User.findOne({_id: user_id}, function (err, user) {
+                //TODO: Check if this will still work without the above query
+
+                let is_premium = true;
+                if(user.character.premium_end <= Date.now() / 1000)
+                {
+                    is_premium = false;
+                }
+
+                let conditions = {_id: user._id}
+                    , update = {$set: {is_logged: true, is_premium: is_premium, last_logged: Math.floor(Date.now() / 1000), "character.server" : __serverName, "socketID": socket.id}}
+                    , options = {multi: false};
+
+                User.update(conditions, update, options, callback);
+
+                function callback(err, numAffected) {
+
+                    //username = existingUser.username;
+                    //user_id = existingUser.user_id;
+                    //coins = character.coins;
+                    currentPlayer.name = user.username;
+                    currentPlayer.id = user._id;
+                    currentPlayer.fish = user.character.fish;
+                    currentPlayer.is_premium = user.character.is_premium;
+                    currentPlayer.popularity = user.character.popularity;
+                    currentPlayer.premium_end = user.character.premium_end;
+                    currentPlayer.ring = user.character.ring;
+
+                    updateFriendsStatus(); //Update our friends status
+
+                    socket.emit('user logged', {});
+                }
+
+            });
         }
     });
 

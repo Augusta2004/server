@@ -1,0 +1,11 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    let socket = io('http://localhost:3000');
+    function premiumToServer(days) {
+        socket.emit("premium purchase", {days});
+    }
+</script>
+
+<form action="">
+    <input type="button" name="submit" value="Purchase" onclick="premiumToServer(30)"/>
+</form>

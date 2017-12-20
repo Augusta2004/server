@@ -26,4 +26,6 @@ module.exports = (config) => {
     require('./../models/Article');
     require('./../models/Friend_request');
     require('./../models/Code');
+    require('./../models/Ring');
+    require('./../models/Ring_shop');
 };

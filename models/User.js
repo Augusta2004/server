@@ -21,7 +21,8 @@ let userSchema = mongoose.Schema({
         update_requests: { type: Boolean, default: false},
         popularity: {type: Number, default: 1},
         is_premium: {type: Boolean, default: false},
-        premium_end: {type: Number, default: 0}
+        premium_end: {type: Number, default: 0},
+        ring: {type: String, default: "none"}
     },
     friends: [{_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, popularity: {type: Number}}],
     socketID: {type: String}

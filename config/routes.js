@@ -4,6 +4,7 @@ const userController = require('./../controllers/user');
 const adminController = require('./../controllers/admin');
 const articleController = require('./../controllers/article');
 const gameController = require('./../controllers/game');
+const premiumController = require('./../controllers/premium');
 //const itemController = require('./../controllers/item');
 
 module.exports = (app) => {
@@ -21,6 +22,7 @@ module.exports = (app) => {
     app.get('/user/profile/:id',userController.profile);
 
     app.get('/play',gameController.game);
+    app.get('/premium',premiumController.premium);
 
     app.use((req, res, next) => {
 
