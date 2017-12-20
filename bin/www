@@ -4,9 +4,13 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('gameserver:server');
-var http = require('http');
+const app = require('../app');
+const debug = require('debug')('gameserver:server');
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
+
+let dev = true;
 
 /**
  * Get port from environment and store in Express.
@@ -19,7 +23,31 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+
+
+if (!dev) {
+  const options = {
+    key: fs.readFileSync('../polar/keys/polar-adventures.com.key'),
+    cert: fs.readFileSync('../polar/keys/polar-adventures_com.chained.crt'),
+    //ca: fs.readFileSync('../polar/keys/polar-adventures_com.ca-bundle'),
+    requestCert: true,
+    rejectUnauthorized: false
+  };
+
+
+  var server = https.createServer(options,app).listen(443);
+
+  http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+  }).listen(80);
+} else {
+  var server = http.createServer(app);
+}
+
+
+
+
 require('../config/socket')(server);
 /**
  * Listen on provided port, on all network interfaces.

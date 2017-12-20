@@ -3,10 +3,12 @@ const path = require('path');
 module.exports = {
     development: {
         rootFolder: path.normalize(path.join(__dirname, '/../')),
-        connectionString: 'mongodb://localhost:27017/game'
+        connectionString: 'mongodb://localhost:27017/game',
+        env:'development'
     },
     production:{
         rootFolder: path.normalize(path.join(__dirname, '/../')),
-        connectionString: 'mongodb://162.249.6.165:27017/game'
+        connectionString: 'mongodb://162.249.6.165:27017/game',
+        env:'production'
     }
 };
