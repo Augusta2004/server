@@ -7,6 +7,7 @@ let articleSchema = mongoose.Schema({
     content: { type: String },
     author: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     dateAdded: { type: Date, default: Date.now() },
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 });
 
 articleSchema.plugin(mongoosePaginate);

@@ -6,7 +6,7 @@ module.exports = {
     },
     newArticlePost: (req, res) => {
         let newArticleArgs = req.body;
-        
+
 
         let errMsg = '';
 
@@ -40,5 +40,12 @@ module.exports = {
                 }
             });
         });
+    },
+    articleGet: (req, res) => {
+        let id = req.query.a;
+        Article.findById(id).populate('author').then(article => {
+            res.render('blog/article',{article});
+        })
+        
     }
 };

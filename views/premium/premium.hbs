@@ -2,10 +2,13 @@
 <script>
     let socket = io('http://localhost:3000');
     function premiumToServer(days) {
-        socket.emit("premium purchase", {days});
+        socket.emit("premium purchase", { days });
     }
 </script>
 
-<form action="">
-    <input type="button" name="submit" value="Purchase" onclick="premiumToServer(30)"/>
-</form>
+<div class="container">
+    <form action="">
+        <input class="btn btn-success" type="button" name="submit" value="Purchase" onclick="premiumToServer(30)" />
+    </form>
+
+</div>

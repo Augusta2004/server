@@ -49,4 +49,5 @@ module.exports = (config) => {
     require('./../models/Code');
     require('./../models/Ring');
     require('./../models/Ring_shop');
+    require('./../models/Comment');
 };
